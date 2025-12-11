@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Sequence Logic Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 700px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .instructions p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .puzzle-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sequence-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .sequence-number {
+            background: white;
+            color: #667eea;
+            font-size: 2em;
+            font-weight: bold;
+            padding: 20px 25px;
+            border-radius: 12px;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sequence-number:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sequence-number.missing {
+            background: #fff3cd;
+            color: #856404;
+            border: 3px dashed #ffc107;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .sequence-number.missing::before {
+            content: '?';
+            font-size: 1.2em;
+        }
+
+        .sequence-number.revealed {
+            background: #d4edda;
+            color: #155724;
+            border: 3px solid #28a745;
+        }
+
+        .sequence-number.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 3px solid #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .pattern-hint {
+            text-align: center;
+            color: white;
+            font-size: 1em;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .pattern-hint strong {
+            color: #ffd93d;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-label {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .answer-input {
+            font-size: 1.8em;
+            padding: 15px 25px;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            text-align: center;
+            width: 150px;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
+        }
+
+        .answer-input:disabled {
+            background: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        button {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-3px);
+        }
+
+        .btn-hint {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-hint:hover {
+            background: #e67e22;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.15em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: #d4edda;
+            color: #155724;
+            border: 3px solid #c3e6cb;
+        }
+
+        .message.lose {
+            background: #f8d7da;
+            color: #721c24;
+            border: 3px solid #f5c6cb;
+        }
+
+        .message.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 3px solid #ffeaa7;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #2196f3;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .explanation-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+        }
+
+        .explanation-text {
+            color: #0d47a1;
+            line-height: 1.7;
+            font-size: 1em;
+        }
+
+        .explanation-steps {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+        }
+
+        .explanation-steps li {
+            margin: 8px 0;
+            color: #1565c0;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .sequence-number {
+                font-size: 1.5em;
+                padding: 15px 20px;
+                min-width: 60px;
+            }
+
+            .answer-input {
+                font-size: 1.5em;
+                width: 120px;
+                padding: 12px 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 15px;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .stat-value {
+                font-size: 1.5em;
+            }
+        }
+
+        .streak-indicator {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: linear-gradient(135deg, #ffd93d 0%, #ffaa00 100%);
+            border-radius: 25px;
+            font-weight: bold;
+            color: #333;
+            display: none;
+        }
+
+        .streak-indicator.show {
+            display: block;
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 Number Detective</h1>
+        <p class="subtitle">Find the missing number in the sequence!</p>
+
+        <div class="instructions">
+            <h3>📋 How to Play</h3>
+            <p>Study the number sequence and identify the pattern. Each sequence follows a logical rule (addition, multiplication, doubling, squares, etc.). Enter the missing number and check your answer!</p>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">🟢 Easy</button>
+            <button class="difficulty-btn" data-difficulty="medium">🟡 Medium</button>
+            <button class="difficulty-btn" data-difficulty="hard">🔴 Hard</button>
+        </div>
+
+        <div class="streak-indicator" id="streakIndicator">
+            🔥 Streak: <span id="streakCount">0</span>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Solved</div>
+                <div class="stat-value" id="solvedCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Attempts</div>
+                <div class="stat-value" id="attemptsCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value" id="accuracyRate">100%</div>
+            </div>
+        </div>
+
+        <div class="puzzle-container">
+            <div class="sequence-display" id="sequenceDisplay">
+                <!-- Sequence will be generated here -->
+            </div>
+            <div class="pattern-hint" id="patternHint">
+                Pattern Type: <strong id="patternType">Hidden</strong>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-wrapper">
+                <label class="input-label" for="answerInput">Your Answer:</label>
+                <input
+                    type="number"
+                    id="answerInput"
+                    class="answer-input"
+                    placeholder="?"
+                    onkeypress="handleEnterKey(event)"
+                >
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-secondary" onclick="newPuzzle()">🔄 New Puzzle</button>
+            <button class="btn-hint" onclick="showHint()" id="hintBtn">💡 Show Hint</button>
+            <button class="btn-primary" onclick="checkAnswer()" id="checkBtn">✓ Check Answer</button>
+        </div>
+
+        <div class="message" id="message"></div>
+        <div class="explanation" id="explanation"></div>
+    </div>
+
+    <script>
+        // Game state
+        let currentPuzzle = null;
+        let difficulty = 'easy';
+        let hintsUsed = 0;
+        let solvedCount = 0;
+        let attemptsCount = 0;
+        let hasChecked = false;
+        let streak = 0;
+
+        /**
+         * Pattern definitions - each pattern generates a sequence with a missing number
+         */
+        const patterns = {
+            // Easy patterns
+            arithmetic: {
+                name: "Arithmetic Sequence",
+                difficulty: 'easy',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 20) + 1;
+                    const step = Math.floor(Math.random() * 5) + 2;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        sequence.push(start + i * step);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1; // Not first or last
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: `Add ${step} to each number`,
+                        explanation: `This is an arithmetic sequence where each number increases by ${step}. Starting at ${start}, we add ${step} repeatedly: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            evenNumbers: {
+                name: "Even Numbers",
+                difficulty: 'easy',
+                generate: () => {
+                    const start = (Math.floor(Math.random() * 10) + 1) * 2;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        sequence.push(start + i * 2);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number increases by 2 (even numbers)",
+                        explanation: `This is a sequence of consecutive even numbers. Starting at ${start}, each number is 2 more than the previous: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            oddNumbers: {
+                name: "Odd Numbers",
+                difficulty: 'easy',
+                generate: () => {
+                    const start = (Math.floor(Math.random() * 10) + 1) * 2 - 1;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        sequence.push(start + i * 2);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number increases by 2 (odd numbers)",
+                        explanation: `This is a sequence of consecutive odd numbers. Starting at ${start}, each number is 2 more than the previous: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            countByFives: {
+                name: "Count by Fives",
+                difficulty: 'easy',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 10) * 5;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        sequence.push(start + i * 5);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Add 5 to each number",
+                        explanation: `This sequence counts by fives. Starting at ${start}, we add 5 each time: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+
+            // Medium patterns
+            doubling: {
+                name: "Doubling Sequence",
+                difficulty: 'medium',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 3) + 2;
+                    const sequence = [start];
+                    for (let i = 1; i < 6; i++) {
+                        sequence.push(sequence[i - 1] * 2);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number doubles (multiply by 2)",
+                        explanation: `This is a doubling sequence where each number is twice the previous. Starting at ${start}, we multiply by 2: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            squares: {
+                name: "Perfect Squares",
+                difficulty: 'medium',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 3) + 1;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        const n = start + i;
+                        sequence.push(n * n);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number is a perfect square (n²)",
+                        explanation: `These are perfect squares. Starting at ${start}²=${sequence[0]}, the sequence is: ${sequence.map((v, i) => `${start + i}²=${v}`).join(', ')}.`
+                    };
+                },
+            },
+            fibonacci: {
+                name: "Fibonacci Sequence",
+                difficulty: 'medium',
+                generate: () => {
+                    const sequence = [1, 1];
+                    for (let i = 2; i < 7; i++) {
+                        sequence.push(sequence[i - 1] + sequence[i - 2]);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 3) + 3; // Later positions
+                    return {
+                        sequence: sequence.slice(0, 6),
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number is the sum of the previous two",
+                        explanation: `This is the Fibonacci sequence where each number equals the sum of the two preceding numbers: 1+1=2, 1+2=3, 2+3=5, 3+5=8, etc. Full sequence: ${sequence.slice(0, 6).join(', ')}.`
+                    };
+                },
+            },
+            tripling: {
+                name: "Tripling Sequence",
+                difficulty: 'medium',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 2) + 1;
+                    const sequence = [start];
+                    for (let i = 1; i < 6; i++) {
+                        sequence.push(sequence[i - 1] * 3);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 3) + 2;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number triples (multiply by 3)",
+                        explanation: `This is a tripling sequence where each number is three times the previous. Starting at ${start}, we multiply by 3: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+
+            // Hard patterns
+            geometric: {
+                name: "Geometric Sequence",
+                difficulty: 'hard',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 3) + 2;
+                    const ratio = Math.floor(Math.random() * 3) + 2;
+                    const sequence = [start];
+                    for (let i = 1; i < 6; i++) {
+                        sequence.push(sequence[i - 1] * ratio);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: `Multiply each number by ${ratio}`,
+                        explanation: `This is a geometric sequence with ratio ${ratio}. Each number is ${ratio} times the previous: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            cubes: {
+                name: "Perfect Cubes",
+                difficulty: 'hard',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 2) + 1;
+                    const sequence = [];
+                    for (let i = 0; i < 6; i++) {
+                        const n = start + i;
+                        sequence.push(n * n * n);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Each number is a perfect cube (n³)",
+                        explanation: `These are perfect cubes. Starting at ${start}³=${sequence[0]}, the sequence is: ${sequence.map((v, i) => `${start + i}³=${v}`).join(', ')}.`
+                    };
+                },
+            },
+            alternatingPattern: {
+                name: "Alternating Pattern",
+                difficulty: 'hard',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 10) + 5;
+                    const add = Math.floor(Math.random() * 5) + 3;
+                    const sub = Math.floor(Math.random() * 3) + 1;
+                    const sequence = [start];
+                    for (let i = 1; i < 6; i++) {
+                        if (i % 2 === 1) {
+                            sequence.push(sequence[i - 1] + add);
+                        } else {
+                            sequence.push(sequence[i - 1] - sub);
+                        }
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: `Alternating: +${add}, -${sub}, +${add}, -${sub}...`,
+                        explanation: `This sequence alternates between adding ${add} and subtracting ${sub}: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+            triangularNumbers: {
+                name: "Triangular Numbers",
+                difficulty: 'hard',
+                generate: () => {
+                    const sequence = [];
+                    for (let n = 1; n <= 6; n++) {
+                        sequence.push((n * (n + 1)) / 2);
+                    }
+                    const missingIndex = Math.floor(Math.random() * 4) + 1;
+                    return {
+                        sequence,
+                        missingIndex,
+                        answer: sequence[missingIndex],
+                        hint: "Sum of consecutive numbers (1, 1+2, 1+2+3...)",
+                        explanation: `These are triangular numbers. Each is the sum of consecutive integers: 1, 1+2=3, 1+2+3=6, 1+2+3+4=10, etc. Sequence: ${sequence.join(', ')}.`
+                    };
+                },
+            },
+        };
+
+        /**
+         * Generate a new puzzle based on difficulty
+         */
+        function generatePuzzle() {
+            // Filter patterns by difficulty
+            const availablePatterns = Object.entries(patterns)
+                .filter(([key, pattern]) => pattern.difficulty === difficulty)
+                .map(([key, pattern]) => ({ key, ...pattern }));
+
+            // Select random pattern
+            const pattern = availablePatterns[Math.floor(Math.random() * availablePatterns.length)];
+            const puzzleData = pattern.generate();
+
+            currentPuzzle = {
+                patternName: pattern.name,
+                ...puzzleData
+            };
+
+            // Reset state
+            hasChecked = false;
+            hintsUsed = 0;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').disabled = false;
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('patternType').textContent = 'Hidden';
+
+            renderPuzzle();
+            hideMessage();
+            hideExplanation();
+        }
+
+        /**
+         * Render the puzzle to the DOM
+         */
+        function renderPuzzle() {
+            const display = document.getElementById('sequenceDisplay');
+            display.innerHTML = '';
+
+            currentPuzzle.sequence.forEach((num, index) => {
+                const numDiv = document.createElement('div');
+                numDiv.className = 'sequence-number';
+
+                if (index === currentPuzzle.missingIndex) {
+                    numDiv.classList.add('missing');
+                    numDiv.textContent = '';
+                } else {
+                    numDiv.textContent = num;
+                }
+
+                display.appendChild(numDiv);
+            });
+        }
+
+        /**
+         * Show hint to the player
+         */
+        function showHint() {
+            if (hasChecked) {
+                showMessage('Puzzle already complete! Try a new one.', 'hint');
+                return;
+            }
+
+            hintsUsed++;
+
+            if (hintsUsed === 1) {
+                // First hint: show pattern type
+                document.getElementById('patternType').textContent = currentPuzzle.patternName;
+                showMessage(`💡 Pattern Type: ${currentPuzzle.patternName}`, 'hint');
+            } else {
+                // Second hint: show the rule
+                showMessage(`💡 Hint: ${currentPuzzle.hint}`, 'hint');
+            }
+        }
+
+        /**
+         * Check the player's answer
+         */
+        function checkAnswer() {
+            if (hasChecked) return;
+
+            const userAnswer = parseInt(document.getElementById('answerInput').value);
+
+            if (isNaN(userAnswer)) {
+                showMessage('⚠️ Please enter a number!', 'hint');
+                return;
+            }
+
+            hasChecked = true;
+            attemptsCount++;
+            document.getElementById('checkBtn').disabled = true;
+            document.getElementById('answerInput').disabled = true;
+
+            // Update the display
+            const numbers = document.querySelectorAll('.sequence-number');
+            const missingDiv = numbers[currentPuzzle.missingIndex];
+
+            if (userAnswer === currentPuzzle.answer) {
+                // Correct!
+                solvedCount++;
+                streak++;
+                missingDiv.classList.remove('missing');
+                missingDiv.classList.add('revealed');
+                missingDiv.textContent = currentPuzzle.answer;
+
+                showMessage(`🎉 Correct! The answer is ${currentPuzzle.answer}`, 'win');
+                showExplanation();
+
+                if (streak >= 3) {
+                    const streakDiv = document.getElementById('streakIndicator');
+                    streakDiv.classList.add('show');
+                    document.getElementById('streakCount').textContent = streak;
+                }
+            } else {
+                // Incorrect
+                streak = 0;
+                document.getElementById('streakIndicator').classList.remove('show');
+
+                missingDiv.classList.remove('missing');
+                missingDiv.classList.add('incorrect');
+                missingDiv.textContent = userAnswer;
+
+                // Show correct answer after a delay
+                setTimeout(() => {
+                    const correctDiv = document.createElement('div');
+                    correctDiv.className = 'sequence-number revealed';
+                    correctDiv.textContent = currentPuzzle.answer;
+                    missingDiv.replaceWith(correctDiv);
+                }, 1000);
+
+                showMessage(`❌ Not quite! You answered ${userAnswer}, but the correct answer is ${currentPuzzle.answer}`, 'lose');
+                showExplanation();
+            }
+
+            updateStats();
+        }
+
+        /**
+         * Handle Enter key press in input
+         */
+        function handleEnterKey(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        }
+
+        /**
+         * Update statistics display
+         */
+        function updateStats() {
+            document.getElementById('solvedCount').textContent = solvedCount;
+            document.getElementById('attemptsCount').textContent = attemptsCount;
+
+            const accuracy = attemptsCount > 0 ? Math.round((solvedCount / attemptsCount) * 100) : 100;
+            document.getElementById('accuracyRate').textContent = `${accuracy}%`;
+        }
+
+        /**
+         * Show explanation
+         */
+        function showExplanation() {
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.innerHTML = `
+                <div class="explanation-title">📊 Pattern Explanation</div>
+                <div class="explanation-text">
+                    <strong>${currentPuzzle.patternName}</strong><br><br>
+                    ${currentPuzzle.explanation}
+                </div>
+            `;
+            explanationDiv.classList.add('show');
+        }
+
+        /**
+         * Hide explanation
+         */
+        function hideExplanation() {
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        /**
+         * Show message to player
+         * @param {string} text - Message text
+         * @param {string} type - Message type ('win', 'lose', or 'hint')
+         */
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} show`;
+
+            if (type === 'hint') {
+                setTimeout(() => {
+                    message.classList.remove('show');
+                }, 4000);
+            }
+        }
+
+        /**
+         * Hide message
+         */
+        function hideMessage() {
+            document.getElementById('message').classList.remove('show');
+        }
+
+        /**
+         * Start a new puzzle
+         */
+        function newPuzzle() {
+            generatePuzzle();
+        }
+
+        /**
+         * Handle difficulty selection
+         */
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                difficulty = e.target.dataset.difficulty;
+                generatePuzzle();
+            });
+        });
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            generatePuzzle();
+            updateStats();
+
+            // Focus on input
+            document.getElementById('answerInput').focus();
+        };
+    </script>
+</body>
+</html>

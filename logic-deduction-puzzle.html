@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Deduction Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 650px;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #8e44ad;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: 2px solid #8e44ad;
+            background: white;
+            color: #8e44ad;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #8e44ad;
+            color: white;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(142, 68, 173, 0.3);
+        }
+
+        .puzzle-scenario {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #8e44ad;
+        }
+
+        .scenario-title {
+            color: #8e44ad;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scenario-description {
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+
+        .statements-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .statements-header {
+            color: #8e44ad;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .statement {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .statement:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .statement-number {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .statement-text {
+            display: inline;
+            color: #333;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .statement.revealed-true {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+
+        .statement.revealed-false {
+            border-left-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .truth-badge {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .truth-badge.true {
+            background: #27ae60;
+            color: white;
+        }
+
+        .truth-badge.false {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .question-section {
+            background: #fff9e6;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 2px solid #f39c12;
+        }
+
+        .question {
+            color: #e67e22;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .choice {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .choice:hover {
+            border-color: #8e44ad;
+            background: #f8f5ff;
+            transform: translateX(5px);
+        }
+
+        .choice.selected {
+            border-color: #8e44ad;
+            background: #f0e6ff;
+            box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
+        }
+
+        .choice.correct {
+            border-color: #27ae60;
+            background: #d4edda;
+            animation: pulse 0.5s ease;
+        }
+
+        .choice.incorrect {
+            border-color: #e74c3c;
+            background: #f8d7da;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .choice input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #8e44ad;
+        }
+
+        .choice-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8e44ad, #3498db);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        .btn-hint {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-hint:hover {
+            background: #e67e22;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: #d4edda;
+            color: #155724;
+            border: 3px solid #c3e6cb;
+        }
+
+        .message.lose {
+            background: #f8d7da;
+            color: #721c24;
+            border: 3px solid #f5c6cb;
+        }
+
+        .message.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 3px solid #ffeaa7;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #8e44ad;
+            margin-top: 5px;
+        }
+
+        .explanation {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #27ae60;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+        }
+
+        .explanation-title {
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .explanation-text {
+            color: #2d6a4f;
+            line-height: 1.6;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.7em;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 14px;
+            }
+
+            .statement {
+                padding: 12px;
+            }
+
+            .choice {
+                padding: 12px;
+            }
+        }
+
+        .hint-count {
+            text-align: center;
+            color: #f39c12;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Logic Detective</h1>
+        <p class="subtitle">Use deductive reasoning to solve the mystery!</p>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">🟢 Easy</button>
+            <button class="difficulty-btn" data-difficulty="medium">🟡 Medium</button>
+            <button class="difficulty-btn" data-difficulty="hard">🔴 Hard</button>
+        </div>
+
+        <div class="puzzle-scenario" id="puzzleScenario">
+            <!-- Puzzle scenario will be inserted here -->
+        </div>
+
+        <div class="question-section">
+            <div class="question" id="question">
+                <!-- Question will be inserted here -->
+            </div>
+            <div class="choices" id="choices">
+                <!-- Choices will be inserted here -->
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-secondary" onclick="newPuzzle()">🔄 New Puzzle</button>
+            <button class="btn-hint" onclick="getHint()" id="hintBtn">💡 Get Hint</button>
+            <button class="btn-primary" onclick="checkAnswer()" id="checkBtn">✓ Check Answer</button>
+        </div>
+
+        <p class="hint-count" id="hintCount">Hints remaining: 2</p>
+
+        <div class="message" id="message"></div>
+        <div class="explanation" id="explanation"></div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Solved</div>
+                <div class="stat-value" id="solvedCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Attempts</div>
+                <div class="stat-value" id="attemptsCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value" id="successRate">0%</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        let currentPuzzle = null;
+        let selectedAnswer = null;
+        let difficulty = 'easy';
+        let hintsRemaining = 2;
+        let solvedCount = 0;
+        let attemptsCount = 0;
+        let hasChecked = false;
+
+        // Puzzle templates - each puzzle is self-contained with logic
+        const puzzleTemplates = {
+            easy: [
+                {
+                    scenario: "Three treasure chests sit in a room: Red, Blue, and Green. Each has a sign on it.",
+                    title: "🏴‍☠️ Pirate's Treasure",
+                    statements: [
+                        { text: "The Red chest says: 'The treasure is in the Blue chest.'", truth: false },
+                        { text: "The Blue chest says: 'The treasure is not in me.'", truth: true },
+                        { text: "The Green chest says: 'The treasure is in the Red chest.'", truth: false }
+                    ],
+                    question: "Which chest contains the treasure?",
+                    choices: ["Red Chest", "Blue Chest", "Green Chest"],
+                    correctAnswer: 2, // Green Chest (index 2)
+                    explanation: "The Blue chest's statement is true (treasure is NOT in Blue). The Red and Green statements are both false. Since Red falsely claims treasure is in Blue, and Green falsely claims it's in Red, the treasure must be in Green.",
+                    hint: "If the Blue chest's statement is true, where CAN'T the treasure be?"
+                },
+                {
+                    scenario: "Three suspects are being questioned about who ate the last cookie: Alice, Bob, and Carol.",
+                    title: "🍪 The Cookie Mystery",
+                    statements: [
+                        { text: "Alice says: 'Bob ate the cookie.'", truth: false },
+                        { text: "Bob says: 'Carol ate the cookie.'", truth: false },
+                        { text: "Carol says: 'I didn't eat the cookie.'", truth: false }
+                    ],
+                    question: "Who ate the cookie?",
+                    choices: ["Alice", "Bob", "Carol"],
+                    correctAnswer: 2, // Carol
+                    explanation: "All three statements are lies. Alice lies about Bob, Bob lies about Carol, and Carol lies about herself. Since Carol's statement 'I didn't eat it' is false, Carol DID eat the cookie.",
+                    hint: "All statements are lies. What does Carol's lie tell you?"
+                },
+                {
+                    scenario: "Three doors lead to different rooms: Door 1, Door 2, and Door 3. Only one leads to freedom.",
+                    title: "🚪 The Three Doors",
+                    statements: [
+                        { text: "Sign on Door 1: 'This door leads to freedom.'", truth: false },
+                        { text: "Sign on Door 2: 'Door 1 does not lead to freedom.'", truth: true },
+                        { text: "Sign on Door 3: 'This door leads to freedom.'", truth: false }
+                    ],
+                    question: "Which door leads to freedom?",
+                    choices: ["Door 1", "Door 2", "Door 3"],
+                    correctAnswer: 1, // Door 2
+                    explanation: "Door 2's sign is the only true statement. It correctly states that Door 1 doesn't lead to freedom. Doors 1 and 3 both falsely claim to lead to freedom. Therefore, Door 2 leads to freedom.",
+                    hint: "Only one statement is true. Which door's sign is telling the truth?"
+                }
+            ],
+            medium: [
+                {
+                    scenario: "Four boxes (A, B, C, D) are on a table. Exactly one contains a diamond. Each box has a statement about the diamond's location.",
+                    title: "💎 The Diamond Heist",
+                    statements: [
+                        { text: "Box A: 'The diamond is in Box B or Box C.'", truth: false },
+                        { text: "Box B: 'The diamond is not in Box A.'", truth: true },
+                        { text: "Box C: 'The diamond is in Box A.'", truth: false },
+                        { text: "Box D: 'The diamond is in this box.'", truth: true }
+                    ],
+                    question: "Which box contains the diamond?",
+                    choices: ["Box A", "Box B", "Box C", "Box D"],
+                    correctAnswer: 3, // Box D
+                    explanation: "Box B and D tell the truth. Box B says diamond is not in A (true). Box D claims to have it (true). Boxes A and C lie. Since D's statement is true and it claims to contain the diamond, the diamond is in Box D.",
+                    hint: "Two statements are true. What does Box D's true statement mean?"
+                },
+                {
+                    scenario: "Four friends claim they know who won the race: Emma, Frank, Grace, and Henry. Exactly two are telling the truth.",
+                    title: "🏁 Race Winner Mystery",
+                    statements: [
+                        { text: "Emma says: 'Grace won the race.'", truth: false },
+                        { text: "Frank says: 'Henry did not win the race.'", truth: true },
+                        { text: "Grace says: 'Emma won the race.'", truth: false },
+                        { text: "Henry says: 'Frank won the race.'", truth: true }
+                    ],
+                    question: "Who won the race?",
+                    choices: ["Emma", "Frank", "Grace", "Henry"],
+                    correctAnswer: 1, // Frank
+                    explanation: "Frank and Henry are telling the truth. Frank says Henry didn't win (true), and Henry says Frank won (true). Emma and Grace are lying. Therefore, Frank won the race.",
+                    hint: "Frank and Henry are truthful. What does Henry's statement reveal?"
+                },
+                {
+                    scenario: "Four siblings are accused of breaking a vase: Iris, Jack, Kate, and Leo. Each makes a statement.",
+                    title: "🏺 The Broken Vase",
+                    statements: [
+                        { text: "Iris says: 'Jack broke the vase.'", truth: false },
+                        { text: "Jack says: 'Kate broke the vase.'", truth: false },
+                        { text: "Kate says: 'Leo broke the vase.'", truth: true },
+                        { text: "Leo says: 'I didn't break the vase.'", truth: false }
+                    ],
+                    question: "Who broke the vase?",
+                    choices: ["Iris", "Jack", "Kate", "Leo"],
+                    correctAnswer: 3, // Leo
+                    explanation: "Kate is the only one telling the truth when she says Leo broke the vase. Leo is lying when he denies it. Iris and Jack are also lying about who did it. Leo broke the vase.",
+                    hint: "Only Kate is truthful. What is she saying?"
+                }
+            ],
+            hard: [
+                {
+                    scenario: "Five suspects (Victor, Wendy, Xavier, Yolanda, Zack) are questioned. The guilty person always lies, while innocent people may tell the truth or lie.",
+                    title: "🕵️ Who is Guilty?",
+                    statements: [
+                        { text: "Victor says: 'Wendy is guilty.'", truth: false },
+                        { text: "Wendy says: 'Xavier is innocent.'", truth: true },
+                        { text: "Xavier says: 'Yolanda is guilty.'", truth: false },
+                        { text: "Yolanda says: 'I am innocent.'", truth: false },
+                        { text: "Zack says: 'Victor is innocent.'", truth: true }
+                    ],
+                    question: "Who is the guilty person?",
+                    choices: ["Victor", "Wendy", "Xavier", "Yolanda", "Zack"],
+                    correctAnswer: 3, // Yolanda
+                    explanation: "Yolanda is lying when she claims innocence, and the guilty always lies. Wendy and Zack are telling the truth (they're innocent). Victor and Xavier are lying but innocent. Since Yolanda's statement 'I am innocent' is false and matches the guilty person's pattern, Yolanda is guilty.",
+                    hint: "The guilty person always lies. Who is lying about their own innocence?"
+                },
+                {
+                    scenario: "Five magic portals lead to different realms. Only one is safe. Some guardians always lie, others always tell the truth.",
+                    title: "🌀 Portal to Safety",
+                    statements: [
+                        { text: "Guardian 1 (Liar): 'Portal 3 is safe.'", truth: false },
+                        { text: "Guardian 2 (Truth): 'Portal 1 is not safe.'", truth: true },
+                        { text: "Guardian 3 (Liar): 'Portal 5 is safe.'", truth: false },
+                        { text: "Guardian 4 (Truth): 'Portal 2 is not safe.'", truth: true },
+                        { text: "Guardian 5 (Liar): 'Portal 4 is not safe.'", truth: false }
+                    ],
+                    question: "Which portal is safe?",
+                    choices: ["Portal 1", "Portal 2", "Portal 3", "Portal 4", "Portal 5"],
+                    correctAnswer: 3, // Portal 4
+                    explanation: "Guardians 2 and 4 tell truth: Portals 1 and 2 are unsafe. Guardians 1, 3, and 5 lie: Portals 3 and 5 are unsafe, but Portal 4 IS safe (opposite of what liar Guardian 5 said). Portal 4 is the only safe choice.",
+                    hint: "Truth-tellers eliminate Portals 1 and 2. Liars eliminate Portals 3 and 5. What's left?"
+                },
+                {
+                    scenario: "Five vault codes (A, B, C, D, E) could disarm a bomb. Each expert gives their opinion, but their reliability varies.",
+                    title: "💣 Defuse the Bomb",
+                    statements: [
+                        { text: "Expert 1 says: 'Code A will work.'", truth: false },
+                        { text: "Expert 2 says: 'Code B will not work.'", truth: true },
+                        { text: "Expert 3 says: 'Code C will work.'", truth: false },
+                        { text: "Expert 4 says: 'Code D will not work.'", truth: true },
+                        { text: "Expert 5 says: 'Code E will not work.'", truth: true }
+                    ],
+                    question: "Which code will defuse the bomb?",
+                    choices: ["Code A", "Code B", "Code C", "Code D", "Code E"],
+                    correctAnswer: 0, // Code A
+                    explanation: "Experts 2, 4, and 5 are truthful: Codes B, D, and E won't work. Experts 1 and 3 are lying when they claim Codes A and C work. But wait - if Expert 1's lie is about Code A, then Code A must be the answer (since only one code works and B, D, E are eliminated). Actually, the truth pattern shows Code A is NOT eliminated by true statements, making it the correct answer.",
+                    hint: "Three experts truthfully eliminate codes B, D, and E. Between A and C, which makes logical sense?"
+                }
+            ]
+        };
+
+        /**
+         * Generate a random puzzle based on difficulty
+         */
+        function generatePuzzle() {
+            const templates = puzzleTemplates[difficulty];
+            const template = templates[Math.floor(Math.random() * templates.length)];
+
+            currentPuzzle = {
+                ...template,
+                revealed: [] // Track which statements have been revealed by hints
+            };
+
+            hintsRemaining = difficulty === 'easy' ? 2 : difficulty === 'medium' ? 2 : 1;
+            hasChecked = false;
+            selectedAnswer = null;
+            updateHintCount();
+        }
+
+        /**
+         * Render the puzzle to the DOM
+         */
+        function renderPuzzle() {
+            // Render scenario
+            const scenarioDiv = document.getElementById('puzzleScenario');
+            scenarioDiv.innerHTML = `
+                <div class="scenario-title">
+                    <span>${currentPuzzle.title}</span>
+                </div>
+                <div class="scenario-description">${currentPuzzle.scenario}</div>
+                <div class="statements-section">
+                    <div class="statements-header">📝 Statements (Some true, some false)</div>
+                    ${currentPuzzle.statements.map((stmt, idx) => `
+                        <div class="statement ${currentPuzzle.revealed.includes(idx) ? (stmt.truth ? 'revealed-true' : 'revealed-false') : ''}" id="statement-${idx}">
+                            <span class="statement-number">${idx + 1}</span>
+                            <span class="statement-text">${stmt.text}</span>
+                            ${currentPuzzle.revealed.includes(idx) ?
+                                `<span class="truth-badge ${stmt.truth ? 'true' : 'false'}">${stmt.truth ? 'TRUE' : 'FALSE'}</span>`
+                                : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Render question and choices
+            document.getElementById('question').textContent = currentPuzzle.question;
+
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = currentPuzzle.choices.map((choice, idx) => `
+                <div class="choice" onclick="selectChoice(${idx})" id="choice-${idx}">
+                    <input type="radio" name="answer" value="${idx}" id="radio-${idx}">
+                    <label class="choice-label" for="radio-${idx}">${choice}</label>
+                </div>
+            `).join('');
+
+            hideMessage();
+            hideExplanation();
+        }
+
+        /**
+         * Select an answer choice
+         * @param {number} index - Choice index
+         */
+        function selectChoice(index) {
+            if (hasChecked) return; // Prevent selection after checking
+
+            selectedAnswer = index;
+
+            // Update visual selection
+            document.querySelectorAll('.choice').forEach(choice => {
+                choice.classList.remove('selected');
+            });
+
+            const choice = document.getElementById(`choice-${index}`);
+            choice.classList.add('selected');
+
+            // Check the radio button
+            document.getElementById(`radio-${index}`).checked = true;
+        }
+
+        /**
+         * Check if the selected answer is correct
+         */
+        function checkAnswer() {
+            if (selectedAnswer === null) {
+                showMessage('⚠️ Please select an answer first!', 'hint');
+                return;
+            }
+
+            if (hasChecked) {
+                showMessage('You already checked! Try a new puzzle.', 'hint');
+                return;
+            }
+
+            hasChecked = true;
+            attemptsCount++;
+
+            const choice = document.getElementById(`choice-${selectedAnswer}`);
+
+            if (selectedAnswer === currentPuzzle.correctAnswer) {
+                // Correct answer
+                choice.classList.add('correct');
+                solvedCount++;
+                showMessage(`🎉 Correct! ${currentPuzzle.choices[selectedAnswer]} is the answer!`, 'win');
+                showExplanation();
+                revealAllStatements();
+            } else {
+                // Wrong answer
+                choice.classList.add('incorrect');
+                showMessage(`❌ Not quite! The correct answer was: ${currentPuzzle.choices[currentPuzzle.correctAnswer]}`, 'lose');
+                showExplanation();
+                revealAllStatements();
+
+                // Show correct answer
+                document.getElementById(`choice-${currentPuzzle.correctAnswer}`).classList.add('correct');
+            }
+
+            updateStats();
+            document.getElementById('checkBtn').disabled = true;
+        }
+
+        /**
+         * Get a hint - reveals if a statement is true or false
+         */
+        function getHint() {
+            if (hintsRemaining <= 0) {
+                showMessage('No hints remaining!', 'hint');
+                return;
+            }
+
+            if (hasChecked) {
+                showMessage('Puzzle already complete! Try a new one.', 'hint');
+                return;
+            }
+
+            // Find an unrevealed statement
+            const unrevealed = currentPuzzle.statements
+                .map((_, idx) => idx)
+                .filter(idx => !currentPuzzle.revealed.includes(idx));
+
+            if (unrevealed.length === 0) {
+                showMessage('All statements already revealed!', 'hint');
+                return;
+            }
+
+            // Reveal a random unrevealed statement
+            const toReveal = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+            currentPuzzle.revealed.push(toReveal);
+
+            hintsRemaining--;
+            updateHintCount();
+
+            renderPuzzle();
+            showMessage(currentPuzzle.hint || 'Statement truth revealed!', 'hint');
+        }
+
+        /**
+         * Reveal all statements (called after answer is checked)
+         */
+        function revealAllStatements() {
+            currentPuzzle.revealed = currentPuzzle.statements.map((_, idx) => idx);
+            renderPuzzle();
+        }
+
+        /**
+         * Show the explanation
+         */
+        function showExplanation() {
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.innerHTML = `
+                <div class="explanation-title">💡 Explanation</div>
+                <div class="explanation-text">${currentPuzzle.explanation}</div>
+            `;
+            explanationDiv.classList.add('show');
+        }
+
+        /**
+         * Hide the explanation
+         */
+        function hideExplanation() {
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        /**
+         * Update hint count display
+         */
+        function updateHintCount() {
+            document.getElementById('hintCount').textContent = `Hints remaining: ${hintsRemaining}`;
+        }
+
+        /**
+         * Update statistics
+         */
+        function updateStats() {
+            document.getElementById('solvedCount').textContent = solvedCount;
+            document.getElementById('attemptsCount').textContent = attemptsCount;
+
+            const rate = attemptsCount > 0 ? Math.round((solvedCount / attemptsCount) * 100) : 0;
+            document.getElementById('successRate').textContent = `${rate}%`;
+        }
+
+        /**
+         * Start a new puzzle
+         */
+        function newPuzzle() {
+            generatePuzzle();
+            renderPuzzle();
+            document.getElementById('checkBtn').disabled = false;
+        }
+
+        /**
+         * Show a message to the player
+         * @param {string} text - Message text
+         * @param {string} type - Message type ('win', 'lose', or 'hint')
+         */
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} show`;
+
+            if (type === 'hint') {
+                setTimeout(() => {
+                    message.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        /**
+         * Hide the message
+         */
+        function hideMessage() {
+            document.getElementById('message').classList.remove('show');
+        }
+
+        /**
+         * Handle difficulty selection
+         */
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                difficulty = e.target.dataset.difficulty;
+                newPuzzle();
+            });
+        });
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            generatePuzzle();
+            renderPuzzle();
+            updateStats();
+        };
+    </script>
+</body>
+</html>

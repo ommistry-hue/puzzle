@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lights Out Logic Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .instructions p {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        .puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 20px auto;
+            max-width: 350px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 15px;
+        }
+
+        .light-cell {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.5em;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-cell.on {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .light-cell.off {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) inset;
+        }
+
+        .light-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .light-cell:active {
+            transform: scale(0.95);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+            display: block;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .puzzle-board {
+                gap: 6px;
+                padding: 10px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💡 Lights Out</h1>
+        <p class="subtitle">Turn off all the lights to win!</p>
+
+        <div class="instructions">
+            <h3>📋 How to Play</h3>
+            <p>Click any light to toggle it and its adjacent neighbors (up, down, left, right). Your goal is to turn off ALL lights. Think logically about your moves!</p>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Moves</div>
+                <div class="stat-value" id="moveCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Lights On</div>
+                <div class="stat-value" id="lightsOn">0</div>
+            </div>
+        </div>
+
+        <div class="puzzle-board" id="puzzleBoard">
+            <!-- Grid cells will be generated by JavaScript -->
+        </div>
+
+        <div class="buttons">
+            <button class="btn-secondary" onclick="resetGame()">🔄 New Puzzle</button>
+            <button class="btn-primary" onclick="giveHint()">💡 Hint</button>
+        </div>
+
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        // Game configuration
+        const GRID_SIZE = 5;
+        let board = [];
+        let moveCount = 0;
+        let currentDifficulty = 'easy';
+        let solution = []; // Store the solution path
+
+        // Difficulty settings (number of random moves to generate puzzle)
+        const difficultySettings = {
+            easy: 3,
+            medium: 5,
+            hard: 8
+        };
+
+        /**
+         * Initialize the game board with all lights off
+         */
+        function initBoard() {
+            board = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(false));
+        }
+
+        /**
+         * Toggle a cell and its adjacent neighbors
+         * @param {number} row - Row index
+         * @param {number} col - Column index
+         * @param {boolean} recordMove - Whether to count this as a player move
+         */
+        function toggleCell(row, col, recordMove = true) {
+            // Toggle the clicked cell
+            if (row >= 0 && row < GRID_SIZE && col >= 0 && col < GRID_SIZE) {
+                board[row][col] = !board[row][col];
+            }
+
+            // Toggle adjacent cells (up, down, left, right)
+            const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+            directions.forEach(([dx, dy]) => {
+                const newRow = row + dx;
+                const newCol = col + dy;
+                if (newRow >= 0 && newRow < GRID_SIZE && newCol >= 0 && newCol < GRID_SIZE) {
+                    board[newRow][newCol] = !board[newRow][newCol];
+                }
+            });
+
+            if (recordMove) {
+                moveCount++;
+                updateStats();
+            }
+
+            renderBoard();
+            checkWin();
+        }
+
+        /**
+         * Generate a solvable puzzle by applying random moves from solved state
+         * This ensures the puzzle is always solvable
+         */
+        function generatePuzzle() {
+            initBoard();
+            const moves = difficultySettings[currentDifficulty];
+            solution = [];
+
+            // Apply random toggles to create a solvable puzzle
+            const usedMoves = new Set();
+            for (let i = 0; i < moves; i++) {
+                let row, col, moveKey;
+                // Ensure we don't repeat the same move
+                do {
+                    row = Math.floor(Math.random() * GRID_SIZE);
+                    col = Math.floor(Math.random() * GRID_SIZE);
+                    moveKey = `${row},${col}`;
+                } while (usedMoves.has(moveKey));
+
+                usedMoves.add(moveKey);
+                solution.push({ row, col });
+                toggleCell(row, col, false);
+            }
+
+            // The solution is the reverse of the moves we made
+            solution.reverse();
+            moveCount = 0;
+            updateStats();
+        }
+
+        /**
+         * Render the game board to the DOM
+         */
+        function renderBoard() {
+            const puzzleBoard = document.getElementById('puzzleBoard');
+            puzzleBoard.innerHTML = '';
+
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const cell = document.createElement('button');
+                    cell.className = `light-cell ${board[row][col] ? 'on' : 'off'}`;
+                    cell.innerHTML = board[row][col] ? '💡' : '';
+                    cell.onclick = () => handleCellClick(row, col);
+                    puzzleBoard.appendChild(cell);
+                }
+            }
+        }
+
+        /**
+         * Handle cell click event
+         * @param {number} row - Row index
+         * @param {number} col - Column index
+         */
+        function handleCellClick(row, col) {
+            toggleCell(row, col, true);
+        }
+
+        /**
+         * Update the statistics display
+         */
+        function updateStats() {
+            document.getElementById('moveCount').textContent = moveCount;
+            const lightsOnCount = board.flat().filter(light => light).length;
+            document.getElementById('lightsOn').textContent = lightsOnCount;
+        }
+
+        /**
+         * Check if the player has won (all lights off)
+         */
+        function checkWin() {
+            const allOff = board.every(row => row.every(cell => !cell));
+
+            if (allOff) {
+                showMessage(`🎉 Congratulations! You solved it in ${moveCount} moves!`, 'win');
+            }
+        }
+
+        /**
+         * Display a message to the player
+         * @param {string} text - Message text
+         * @param {string} type - Message type ('win' or 'hint')
+         */
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+
+            if (type === 'hint') {
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        /**
+         * Provide a hint by highlighting the next move in the solution
+         */
+        function giveHint() {
+            if (solution.length > 0) {
+                const hint = solution[0];
+                showMessage(`💡 Try clicking the light at row ${hint.row + 1}, column ${hint.col + 1}`, 'hint');
+
+                // Briefly highlight the hint cell
+                const cells = document.querySelectorAll('.light-cell');
+                const hintIndex = hint.row * GRID_SIZE + hint.col;
+                const hintCell = cells[hintIndex];
+                hintCell.style.border = '3px solid #ff6b6b';
+
+                setTimeout(() => {
+                    hintCell.style.border = 'none';
+                }, 2000);
+            } else {
+                showMessage('💡 No hints available for this puzzle!', 'hint');
+            }
+        }
+
+        /**
+         * Reset the game with a new puzzle
+         */
+        function resetGame() {
+            document.getElementById('message').style.display = 'none';
+            generatePuzzle();
+            renderBoard();
+        }
+
+        /**
+         * Handle difficulty selection
+         */
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentDifficulty = e.target.dataset.difficulty;
+                resetGame();
+            });
+        });
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            generatePuzzle();
+            renderBoard();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Games Arena - Challenge Your Mind</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f1e;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* ==================== SCREEN MANAGEMENT ==================== */
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* ==================== HOME PAGE STYLES ==================== */
+        .home-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Particles */
+        .bg-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        .particle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            right: 15%;
+            top: 40%;
+            animation-delay: 2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            bottom: 20%;
+            animation-delay: 4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 40px;
+            height: 40px;
+            right: 30%;
+            top: 60%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+                opacity: 0.6;
+            }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 5%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 100px 5% 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.3s both;
+            text-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.7s both;
+        }
+
+        .hero-btn {
+            padding: 18px 40px;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        .hero-btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Glowing Effect on Button */
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        .hero-btn-primary {
+            animation: glow 2s infinite;
+        }
+
+        /* Games Grid */
+        .games-section {
+            position: relative;
+            z-index: 10;
+            padding: 60px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease 0.9s both;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInCard 0.6s ease both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:nth-child(1) { animation-delay: 0.1s; }
+        .game-card:nth-child(2) { animation-delay: 0.2s; }
+        .game-card:nth-child(3) { animation-delay: 0.3s; }
+        .game-card:nth-child(4) { animation-delay: 0.4s; }
+        .game-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInCard {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255, 215, 0, 0.6);
+            box-shadow: 0 20px 60px rgba(255, 215, 0, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .game-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .game-card:hover .game-icon {
+            animation: spin 0.6s ease;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(360deg) scale(1.2); }
+        }
+
+        .game-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .game-desc {
+            text-align: center;
+            opacity: 0.9;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 40px 5%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            line-height: 1.8;
+        }
+
+        .social-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .social-link {
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .social-link:hover {
+            transform: scale(1.3) rotate(10deg);
+            filter: drop-shadow(0 0 10px #ffd700);
+        }
+
+        /* ==================== GAME PAGE STYLES ==================== */
+        .game-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            color: #333;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .game-header h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .game-subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .instructions {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .instructions p {
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .game-board {
+            margin: 30px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-3px);
+        }
+
+        .message {
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 25px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.15em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 3px solid #28a745;
+        }
+
+        .message.lose {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 3px solid #dc3545;
+        }
+
+        /* ==================== GAME-SPECIFIC STYLES ==================== */
+
+        /* Lights Out */
+        .lights-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .light {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+
+        .light.on {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+        }
+
+        .light.off {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .light:hover {
+            transform: scale(1.08);
+        }
+
+        /* Number Sequence */
+        .sequence-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .sequence-number {
+            background: white;
+            color: #667eea;
+            font-size: 2.2em;
+            font-weight: bold;
+            padding: 25px;
+            border-radius: 15px;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sequence-number:hover {
+            transform: translateY(-5px);
+        }
+
+        .sequence-number.missing {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 3px dashed #ffc107;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .answer-input {
+            font-size: 2em;
+            padding: 15px 25px;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            text-align: center;
+            width: 180px;
+            margin: 25px auto;
+            display: block;
+            font-weight: bold;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Sudoku */
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            max-width: 320px;
+            margin: 0 auto;
+            background: #333;
+            padding: 8px;
+            border-radius: 12px;
+        }
+
+        .sudoku-cell {
+            aspect-ratio: 1;
+            background: white;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sudoku-cell.fixed {
+            background: #e3f2fd;
+            cursor: default;
+            color: #1976d2;
+        }
+
+        .sudoku-cell.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.6);
+            transform: scale(1.05);
+        }
+
+        .number-pad {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .num-btn {
+            width: 55px;
+            height: 55px;
+            border: 3px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .num-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Memory Match */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .memory-card {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .memory-card.flipped {
+            background: white;
+            border: 3px solid #667eea;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 3px solid #28a745;
+            color: #155724;
+            cursor: default;
+        }
+
+        .memory-card:hover:not(.matched) {
+            transform: scale(1.08);
+        }
+
+        /* Pattern Grid */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .pattern-tile {
+            aspect-ratio: 1;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            background: white;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .pattern-tile:hover {
+            transform: scale(1.08);
+        }
+
+        .pattern-tile.selected {
+            border-color: #667eea;
+            background: #e3f2fd;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .pattern-tile.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .pattern-tile.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* ==================== RESPONSIVE DESIGN ==================== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+
+            .hero p {
+                font-size: 1.1em;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .game-container {
+                padding: 25px 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .sequence-number {
+                font-size: 1.6em;
+                padding: 18px;
+                min-width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== HOME PAGE ==================== -->
+    <div id="home" class="screen active">
+        <div class="home-page">
+            <!-- Background Particles -->
+            <div class="bg-particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+
+            <!-- Header -->
+            <header class="header">
+                <div class="logo">🎮 Logic Arena</div>
+                <nav class="nav-links">
+                    <a class="nav-link" onclick="scrollToGames()">Games</a>
+                    <a class="nav-link" onclick="scrollToAbout()">About</a>
+                </nav>
+            </header>
+
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Challenge Your Mind</h1>
+                <p>Experience 5 unique logic puzzles that will test your intelligence, pattern recognition, and problem-solving skills. Are you ready?</p>
+                <div class="hero-buttons">
+                    <button class="hero-btn hero-btn-primary" onclick="scrollToGames()">Start Playing</button>
+                    <button class="hero-btn hero-btn-secondary" onclick="scrollToAbout()">Learn More</button>
+                </div>
+            </section>
+
+            <!-- Games Section -->
+            <section class="games-section" id="games-section">
+                <h2 class="section-title">Choose Your Challenge</h2>
+                <div class="games-grid">
+                    <div class="game-card" onclick="showScreen('game1')">
+                        <div class="game-icon">💡</div>
+                        <div class="game-title">Lights Out</div>
+                        <div class="game-desc">Turn off all the lights by clicking tiles. Each click toggles adjacent lights in this classic logic puzzle!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game2')">
+                        <div class="game-icon">🔢</div>
+                        <div class="game-title">Number Detective</div>
+                        <div class="game-desc">Find the missing number in mathematical sequences. Test your pattern recognition skills!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game3')">
+                        <div class="game-icon">🧩</div>
+                        <div class="game-title">Mini Sudoku</div>
+                        <div class="game-desc">Fill the 4×4 grid with numbers 1-4. Each row and column must contain unique values!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game4')">
+                        <div class="game-icon">🎯</div>
+                        <div class="game-title">Pattern Finder</div>
+                        <div class="game-desc">Identify and select all tiles matching the hidden pattern. Use logic to find the rule!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game5')">
+                        <div class="game-icon">🃏</div>
+                        <div class="game-title">Memory Match</div>
+                        <div class="game-desc">Find all matching pairs by remembering card positions. Challenge your memory!</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer / About Section -->
+            <footer class="footer" id="about-section">
+                <div class="footer-content">
+                    <h3>About Logic Games Arena</h3>
+                    <p>A collection of classic and modern logic puzzles designed to challenge your mind and improve cognitive skills. Each game features random puzzle generation, ensuring endless replayability. No registration required - just click and play!</p>
+                    <p style="margin-top: 15px;">Built with pure HTML, CSS, and JavaScript. No external libraries, no tracking, just pure puzzle-solving fun.</p>
+                    <div class="social-links">
+                        <span class="social-link">🎮</span>
+                        <span class="social-link">🧠</span>
+                        <span class="social-link">⚡</span>
+                        <span class="social-link">🏆</span>
+                    </div>
+                    <p style="margin-top: 25px; opacity: 0.7; font-size: 0.9em;">© 2024 Logic Games Arena. Made with ❤️ for puzzle lovers.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 1: LIGHTS OUT ==================== -->
+    <div id="game1" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+
+                <div class="game-header">
+                    <h1>💡 Lights Out</h1>
+                    <p class="game-subtitle">Turn off all the lights!</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Click any light to toggle it and its adjacent neighbors (up, down, left, right). Your goal is to turn off ALL lights. Plan your moves carefully!</p>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Moves</div>
+                        <div class="stat-value" id="lights-moves">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Lights On</div>
+                        <div class="stat-value" id="lights-count">0</div>
+                    </div>
+                </div>
+
+                <div class="game-board">
+                    <div class="lights-grid" id="lights-grid"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame1()">🔄 Restart</button>
+                    <button class="btn-primary" onclick="checkGame1()">✓ Check</button>
+                </div>
+
+                <div class="message" id="message1"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 2: NUMBER SEQUENCE ==================== -->
+    <div id="game2" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+
+                <div class="game-header">
+                    <h1>🔢 Number Detective</h1>
+                    <p class="game-subtitle">Find the missing number!</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Study the number sequence carefully and identify the mathematical pattern. Enter the missing number to complete the sequence!</p>
+                </div>
+
+                <div class="game-board">
+                    <div class="sequence-display" id="sequence-display"></div>
+                    <input type="number" class="answer-input" id="sequence-input" placeholder="?">
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame2()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame2()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 3: MINI SUDOKU ==================== -->
+    <div id="game3" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+
+                <div class="game-header">
+                    <h1>🧩 Mini Sudoku</h1>
+                    <p class="game-subtitle">Fill the 4×4 grid!</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Fill each row and column with numbers 1-4 (no repeats). Click a cell to select it, then use the number pad to enter your answer!</p>
+                </div>
+
+                <div class="game-board">
+                    <div class="sudoku-grid" id="sudoku-grid"></div>
+                    <div class="number-pad" id="number-pad"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame3()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame3()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 4: PATTERN FINDER ==================== -->
+    <div id="game4" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+
+                <div class="game-header">
+                    <h1>🎯 Pattern Finder</h1>
+                    <p class="game-subtitle">Select all matching tiles!</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Click tiles that match the hidden pattern. Look for even numbers, divisibility rules, or value ranges. Select all correct tiles!</p>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Selected</div>
+                        <div class="stat-value" id="pattern-selected">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Target</div>
+                        <div class="stat-value" id="pattern-target">?</div>
+                    </div>
+                </div>
+
+                <div class="game-board">
+                    <div class="pattern-grid" id="pattern-grid"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame4()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame4()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 5: MEMORY MATCH ==================== -->
+    <div id="game5" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+
+                <div class="game-header">
+                    <h1>🃏 Memory Match</h1>
+                    <p class="game-subtitle">Find all matching pairs!</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Click cards to flip them over. Find all matching pairs by remembering their positions. Match all pairs to win!</p>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Moves</div>
+                        <div class="stat-value" id="memory-moves">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Pairs Found</div>
+                        <div class="stat-value" id="memory-pairs">0</div>
+                    </div>
+                </div>
+
+                <div class="game-board">
+                    <div class="memory-grid" id="memory-grid"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame5()">🔄 Restart</button>
+                </div>
+
+                <div class="message" id="message5"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== NAVIGATION & UTILITIES ====================
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+
+            // Initialize games when shown
+            if (screenId === 'game1' && !game1State.initialized) resetGame1();
+            if (screenId === 'game2' && !game2State.initialized) resetGame2();
+            if (screenId === 'game3' && !game3State.initialized) resetGame3();
+            if (screenId === 'game4' && !game4State.initialized) resetGame4();
+            if (screenId === 'game5' && !game5State.initialized) resetGame5();
+        }
+
+        function scrollToGames() {
+            document.getElementById('games-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function scrollToAbout() {
+            document.getElementById('about-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showMessage(gameNum, text, type) {
+            const msg = document.getElementById(`message${gameNum}`);
+            msg.textContent = text;
+            msg.className = `message ${type} show`;
+        }
+
+        function hideMessage(gameNum) {
+            document.getElementById(`message${gameNum}`).classList.remove('show');
+        }
+
+        // ==================== GAME 1: LIGHTS OUT ====================
+        const game1State = {
+            initialized: false,
+            board: [],
+            moves: 0,
+            size: 5
+        };
+
+        function resetGame1() {
+            game1State.initialized = true;
+            game1State.board = Array(game1State.size).fill(null).map(() => Array(game1State.size).fill(false));
+            game1State.moves = 0;
+
+            // Generate random solvable puzzle
+            const randomMoves = 5;
+            for (let i = 0; i < randomMoves; i++) {
+                const row = Math.floor(Math.random() * game1State.size);
+                const col = Math.floor(Math.random() * game1State.size);
+                toggleLights(row, col, false);
+            }
+
+            renderGame1();
+            hideMessage(1);
+        }
+
+        function toggleLights(row, col, countMove = true) {
+            const size = game1State.size;
+            game1State.board[row][col] = !game1State.board[row][col];
+
+            const directions = [[-1,0], [1,0], [0,-1], [0,1]];
+            directions.forEach(([dr, dc]) => {
+                const newRow = row + dr;
+                const newCol = col + dc;
+                if (newRow >= 0 && newRow < size && newCol >= 0 && newCol < size) {
+                    game1State.board[newRow][newCol] = !game1State.board[newRow][newCol];
+                }
+            });
+
+            if (countMove) {
+                game1State.moves++;
+                renderGame1();
+            }
+        }
+
+        function renderGame1() {
+            const grid = document.getElementById('lights-grid');
+            grid.innerHTML = '';
+
+            for (let row = 0; row < game1State.size; row++) {
+                for (let col = 0; col < game1State.size; col++) {
+                    const btn = document.createElement('button');
+                    btn.className = `light ${game1State.board[row][col] ? 'on' : 'off'}`;
+                    btn.innerHTML = game1State.board[row][col] ? '💡' : '';
+                    btn.onclick = () => toggleLights(row, col);
+                    grid.appendChild(btn);
+                }
+            }
+
+            document.getElementById('lights-moves').textContent = game1State.moves;
+            const lightsOn = game1State.board.flat().filter(l => l).length;
+            document.getElementById('lights-count').textContent = lightsOn;
+        }
+
+        function checkGame1() {
+            const allOff = game1State.board.every(row => row.every(cell => !cell));
+            if (allOff) {
+                showMessage(1, `🎉 Brilliant! You solved it in ${game1State.moves} moves!`, 'win');
+            } else {
+                showMessage(1, 'Not all lights are off yet. Keep trying!', 'lose');
+            }
+        }
+
+        // ==================== GAME 2: NUMBER SEQUENCE ====================
+        const game2State = {
+            initialized: false,
+            sequence: [],
+            missingIndex: 0,
+            answer: 0
+        };
+
+        const patterns = [
+            {
+                name: 'Add 3',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 10) + 1;
+                    return Array.from({length: 6}, (_, i) => start + i * 3);
+                }
+            },
+            {
+                name: 'Even numbers',
+                generate: () => {
+                    const start = (Math.floor(Math.random() * 5) + 1) * 2;
+                    return Array.from({length: 6}, (_, i) => start + i * 2);
+                }
+            },
+            {
+                name: 'Multiply by 2',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 3) + 2;
+                    let result = [start];
+                    for (let i = 1; i < 6; i++) result.push(result[i-1] * 2);
+                    return result;
+                }
+            },
+            {
+                name: 'Add 5',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 10) + 1;
+                    return Array.from({length: 6}, (_, i) => start + i * 5);
+                }
+            },
+            {
+                name: 'Squares',
+                generate: () => {
+                    const start = Math.floor(Math.random() * 3) + 1;
+                    return Array.from({length: 6}, (_, i) => (start + i) * (start + i));
+                }
+            }
+        ];
+
+        function resetGame2() {
+            game2State.initialized = true;
+            const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+            game2State.sequence = pattern.generate();
+            game2State.missingIndex = Math.floor(Math.random() * 4) + 1;
+            game2State.answer = game2State.sequence[game2State.missingIndex];
+
+            document.getElementById('sequence-input').value = '';
+            renderGame2();
+            hideMessage(2);
+        }
+
+        function renderGame2() {
+            const display = document.getElementById('sequence-display');
+            display.innerHTML = '';
+
+            game2State.sequence.forEach((num, idx) => {
+                const div = document.createElement('div');
+                div.className = 'sequence-number';
+                if (idx === game2State.missingIndex) {
+                    div.className += ' missing';
+                    div.textContent = '?';
+                } else {
+                    div.textContent = num;
+                }
+                display.appendChild(div);
+            });
+        }
+
+        function checkGame2() {
+            const userAnswer = parseInt(document.getElementById('sequence-input').value);
+            if (isNaN(userAnswer)) {
+                showMessage(2, '⚠️ Please enter a number!', 'lose');
+                return;
+            }
+
+            if (userAnswer === game2State.answer) {
+                showMessage(2, `🎉 Correct! The answer is ${game2State.answer}!`, 'win');
+            } else {
+                showMessage(2, `❌ Not quite! The correct answer is ${game2State.answer}`, 'lose');
+            }
+        }
+
+        // ==================== GAME 3: MINI SUDOKU ====================
+        const game3State = {
+            initialized: false,
+            solution: [],
+            board: [],
+            selectedCell: null
+        };
+
+        function generateSudoku() {
+            const board = Array(4).fill(null).map(() => Array(4).fill(0));
+
+            function isValid(board, row, col, num) {
+                for (let c = 0; c < 4; c++) if (board[row][c] === num) return false;
+                for (let r = 0; r < 4; r++) if (board[r][col] === num) return false;
+                return true;
+            }
+
+            function solve(board) {
+                for (let row = 0; row < 4; row++) {
+                    for (let col = 0; col < 4; col++) {
+                        if (board[row][col] === 0) {
+                            const nums = [1,2,3,4].sort(() => Math.random() - 0.5);
+                            for (let num of nums) {
+                                if (isValid(board, row, col, num)) {
+                                    board[row][col] = num;
+                                    if (solve(board)) return true;
+                                    board[row][col] = 0;
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            solve(board);
+            return board;
+        }
+
+        function resetGame3() {
+            game3State.initialized = true;
+            game3State.solution = generateSudoku();
+            game3State.board = game3State.solution.map(row => [...row]);
+            game3State.selectedCell = null;
+
+            // Remove some numbers
+            const cellsToRemove = 6;
+            for (let i = 0; i < cellsToRemove; i++) {
+                const row = Math.floor(Math.random() * 4);
+                const col = Math.floor(Math.random() * 4);
+                game3State.board[row][col] = 0;
+            }
+
+            renderGame3();
+            hideMessage(3);
+        }
+
+        function renderGame3() {
+            const grid = document.getElementById('sudoku-grid');
+            grid.innerHTML = '';
+
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'sudoku-cell';
+                    const isFixed = game3State.solution[row][col] === game3State.board[row][col] && game3State.board[row][col] !== 0;
+
+                    if (isFixed) cell.classList.add('fixed');
+                    if (game3State.selectedCell && game3State.selectedCell.row === row && game3State.selectedCell.col === col) {
+                        cell.classList.add('selected');
+                    }
+
+                    cell.textContent = game3State.board[row][col] || '';
+
+                    if (!isFixed) {
+                        cell.onclick = () => {
+                            game3State.selectedCell = {row, col};
+                            renderGame3();
+                        };
+                    }
+
+                    grid.appendChild(cell);
+                }
+            }
+
+            // Render number pad
+            const pad = document.getElementById('number-pad');
+            pad.innerHTML = '';
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'num-btn';
+                btn.textContent = i;
+                btn.onclick = () => {
+                    if (game3State.selectedCell) {
+                        const {row, col} = game3State.selectedCell;
+                        game3State.board[row][col] = i;
+                        renderGame3();
+                    }
+                };
+                pad.appendChild(btn);
+            }
+
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'num-btn';
+            clearBtn.textContent = 'X';
+            clearBtn.onclick = () => {
+                if (game3State.selectedCell) {
+                    const {row, col} = game3State.selectedCell;
+                    game3State.board[row][col] = 0;
+                    renderGame3();
+                }
+            };
+            pad.appendChild(clearBtn);
+        }
+
+        function checkGame3() {
+            let correct = true;
+            for (let row = 0; row < 4; row++) {
+                for (let col = 0; col < 4; col++) {
+                    if (game3State.board[row][col] !== game3State.solution[row][col]) {
+                        correct = false;
+                        break;
+                    }
+                }
+            }
+
+            if (correct) {
+                showMessage(3, '🎉 Perfect! You solved the Sudoku!', 'win');
+            } else {
+                showMessage(3, '❌ Not quite right. Keep trying!', 'lose');
+            }
+        }
+
+        // ==================== GAME 4: PATTERN FINDER ====================
+        const game4State = {
+            initialized: false,
+            tiles: [],
+            correctTiles: new Set(),
+            selectedTiles: new Set(),
+            pattern: null
+        };
+
+        const game4Patterns = [
+            {
+                name: 'Even Numbers',
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size; i++) {
+                        const num = Math.floor(Math.random() * 20) + 1;
+                        tiles.push(num);
+                        if (num % 2 === 0) correct.add(i);
+                    }
+                    return {tiles, correct};
+                }
+            },
+            {
+                name: 'Greater than 10',
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size; i++) {
+                        const num = Math.floor(Math.random() * 20) + 1;
+                        tiles.push(num);
+                        if (num > 10) correct.add(i);
+                    }
+                    return {tiles, correct};
+                }
+            },
+            {
+                name: 'Divisible by 3',
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size; i++) {
+                        const num = Math.floor(Math.random() * 25) + 1;
+                        tiles.push(num);
+                        if (num % 3 === 0) correct.add(i);
+                    }
+                    return {tiles, correct};
+                }
+            }
+        ];
+
+        function resetGame4() {
+            game4State.initialized = true;
+            game4State.selectedTiles = new Set();
+
+            const pattern = game4Patterns[Math.floor(Math.random() * game4Patterns.length)];
+            game4State.pattern = pattern;
+            const result = pattern.generate(16);
+            game4State.tiles = result.tiles;
+            game4State.correctTiles = result.correct;
+
+            renderGame4();
+            hideMessage(4);
+        }
+
+        function renderGame4() {
+            const grid = document.getElementById('pattern-grid');
+            grid.innerHTML = '';
+
+            game4State.tiles.forEach((num, idx) => {
+                const div = document.createElement('div');
+                div.className = 'pattern-tile';
+                div.textContent = num;
+
+                if (game4State.selectedTiles.has(idx)) {
+                    div.classList.add('selected');
+                }
+
+                div.onclick = () => {
+                    if (game4State.selectedTiles.has(idx)) {
+                        game4State.selectedTiles.delete(idx);
+                    } else {
+                        game4State.selectedTiles.add(idx);
+                    }
+                    renderGame4();
+                };
+
+                grid.appendChild(div);
+            });
+
+            document.getElementById('pattern-selected').textContent = game4State.selectedTiles.size;
+            document.getElementById('pattern-target').textContent = '?';
+        }
+
+        function checkGame4() {
+            let allCorrect = true;
+            const tiles = document.querySelectorAll('.pattern-tile');
+
+            game4State.selectedTiles.forEach(idx => {
+                if (game4State.correctTiles.has(idx)) {
+                    tiles[idx].classList.add('correct');
+                } else {
+                    tiles[idx].classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+
+            game4State.correctTiles.forEach(idx => {
+                if (!game4State.selectedTiles.has(idx)) {
+                    tiles[idx].classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
+
+            if (allCorrect && game4State.selectedTiles.size === game4State.correctTiles.size) {
+                showMessage(4, `🎉 Perfect! Pattern was: ${game4State.pattern.name}`, 'win');
+            } else {
+                showMessage(4, `❌ Not quite! Pattern was: ${game4State.pattern.name}`, 'lose');
+            }
+        }
+
+        // ==================== GAME 5: MEMORY MATCH ====================
+        const game5State = {
+            initialized: false,
+            cards: [],
+            flipped: [],
+            matched: new Set(),
+            moves: 0,
+            canFlip: true
+        };
+
+        function resetGame5() {
+            game5State.initialized = true;
+            game5State.moves = 0;
+            game5State.flipped = [];
+            game5State.matched = new Set();
+            game5State.canFlip = true;
+
+            const symbols = ['🍎', '🍌', '🍇', '🍊', '🍓', '🍉', '🥝', '🍒'];
+            const pairs = symbols.slice(0, 8);
+            game5State.cards = [...pairs, ...pairs].sort(() => Math.random() - 0.5);
+
+            renderGame5();
+            hideMessage(5);
+        }
+
+        function renderGame5() {
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+
+            game5State.cards.forEach((symbol, idx) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card';
+
+                if (game5State.matched.has(idx)) {
+                    card.classList.add('matched');
+                    card.textContent = symbol;
+                } else if (game5State.flipped.includes(idx)) {
+                    card.classList.add('flipped');
+                    card.textContent = symbol;
+                } else {
+                    card.textContent = '?';
+                }
+
+                card.onclick = () => flipCard(idx);
+                grid.appendChild(card);
+            });
+
+            document.getElementById('memory-moves').textContent = game5State.moves;
+            document.getElementById('memory-pairs').textContent = game5State.matched.size / 2;
+        }
+
+        function flipCard(idx) {
+            if (!game5State.canFlip || game5State.matched.has(idx) || game5State.flipped.includes(idx)) {
+                return;
+            }
+
+            game5State.flipped.push(idx);
+            renderGame5();
+
+            if (game5State.flipped.length === 2) {
+                game5State.canFlip = false;
+                game5State.moves++;
+
+                const [idx1, idx2] = game5State.flipped;
+                if (game5State.cards[idx1] === game5State.cards[idx2]) {
+                    game5State.matched.add(idx1);
+                    game5State.matched.add(idx2);
+                    game5State.flipped = [];
+                    game5State.canFlip = true;
+                    renderGame5();
+
+                    if (game5State.matched.size === game5State.cards.length) {
+                        setTimeout(() => {
+                            showMessage(5, `🎉 You won in ${game5State.moves} moves!`, 'win');
+                        }, 500);
+                    }
+                } else {
+                    setTimeout(() => {
+                        game5State.flipped = [];
+                        game5State.canFlip = true;
+                        renderGame5();
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

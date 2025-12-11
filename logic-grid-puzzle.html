@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Grid Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 600px;
+            width: 100%;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.3em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+        }
+
+        .instructions {
+            background: #f0f4ff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .instructions p {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .pattern-hint {
+            background: #fff9e6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ffc107;
+            text-align: center;
+        }
+
+        .pattern-hint-label {
+            color: #f57c00;
+            font-weight: bold;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .pattern-hint-text {
+            color: #e65100;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .game-board {
+            display: grid;
+            gap: 12px;
+            margin: 25px auto;
+            max-width: 450px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-board.size-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .game-board.size-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .tile {
+            aspect-ratio: 1;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            font-weight: bold;
+            position: relative;
+            background: white;
+            user-select: none;
+        }
+
+        .tile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tile.selected {
+            border-color: #667eea;
+            border-width: 4px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            transform: scale(1.02);
+        }
+
+        .tile.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .tile.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            animation: shake 0.5s ease;
+        }
+
+        .tile.missed {
+            border-color: #ff9800;
+            background: #fff3e0;
+            animation: pulse 0.6s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .tile-icon {
+            font-size: 2.2em;
+        }
+
+        .tile-value {
+            font-size: 1.8em;
+            color: #333;
+        }
+
+        .tile-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-3px);
+        }
+
+        .btn-hint {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-hint:hover {
+            background: #ffb300;
+            transform: translateY(-3px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: #d4edda;
+            color: #155724;
+            border: 3px solid #c3e6cb;
+        }
+
+        .message.lose {
+            background: #f8d7da;
+            color: #721c24;
+            border: 3px solid #f5c6cb;
+        }
+
+        .message.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 3px solid #ffeaa7;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .explanation {
+            background: #e3f2fd;
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid #2196f3;
+            display: none;
+        }
+
+        .explanation.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .explanation-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .explanation-text {
+            color: #0d47a1;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .game-board {
+                gap: 8px;
+                padding: 15px;
+            }
+
+            .tile {
+                font-size: 1.5em;
+            }
+
+            .tile-icon {
+                font-size: 1.8em;
+            }
+
+            .tile-value {
+                font-size: 1.4em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            button {
+                padding: 14px;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+        }
+
+        .hint-count {
+            text-align: center;
+            color: #ffc107;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧩 Pattern Detective</h1>
+        <p class="subtitle">Find all tiles that match the hidden pattern!</p>
+
+        <div class="instructions">
+            <h3>📋 How to Play</h3>
+            <p>Study the grid and identify the hidden pattern. Click all tiles that follow the rule. Some patterns involve numbers (even/odd, divisibility), colors, positions, or symbols. Use logic to deduce the pattern!</p>
+        </div>
+
+        <div class="pattern-hint" id="patternHint">
+            <div class="pattern-hint-label">🔍 Pattern Type</div>
+            <div class="pattern-hint-text" id="patternHintText">???</div>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-size="3">3×3 Easy</button>
+            <button class="difficulty-btn" data-size="4">4×4 Hard</button>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Selected</div>
+                <div class="stat-value" id="selectedCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Target</div>
+                <div class="stat-value" id="targetCount">?</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="game-board size-3" id="gameBoard">
+            <!-- Grid tiles will be generated by JavaScript -->
+        </div>
+
+        <div class="buttons">
+            <button class="btn-secondary" onclick="newGame()">🔄 New Game</button>
+            <button class="btn-hint" onclick="revealPattern()">💡 Reveal Pattern</button>
+            <button class="btn-primary" onclick="checkAnswer()" id="checkBtn">✓ Check Answer</button>
+        </div>
+
+        <p class="hint-count" id="hintStatus">Pattern hidden - use logic to find it!</p>
+
+        <div class="message" id="message"></div>
+        <div class="explanation" id="explanation"></div>
+    </div>
+
+    <script>
+        // Game state
+        let gridSize = 3;
+        let tiles = [];
+        let selectedTiles = new Set();
+        let correctTiles = new Set();
+        let currentPattern = null;
+        let hasChecked = false;
+        let patternRevealed = false;
+        let score = 0;
+
+        /**
+         * Pattern definitions - each pattern has logic to determine which tiles are correct
+         */
+        const patterns = {
+            // Number-based patterns
+            evenNumbers: {
+                name: "Even Numbers",
+                hint: "Number Properties",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    let idx = 0;
+                    for (let i = 0; i < size * size; i++) {
+                        const num = Math.floor(Math.random() * 20) + 1;
+                        tiles.push({ type: 'number', value: num, display: num });
+                        if (num % 2 === 0) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Even Numbers Only</strong>. All tiles with even numbers (divisible by 2) were correct."
+            },
+            oddNumbers: {
+                name: "Odd Numbers",
+                hint: "Number Properties",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size * size; i++) {
+                        const num = Math.floor(Math.random() * 20) + 1;
+                        tiles.push({ type: 'number', value: num, display: num });
+                        if (num % 2 === 1) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Odd Numbers Only</strong>. All tiles with odd numbers were correct."
+            },
+            divisibleByThree: {
+                name: "Divisible by 3",
+                hint: "Divisibility Rule",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size * size; i++) {
+                        const num = Math.floor(Math.random() * 25) + 1;
+                        tiles.push({ type: 'number', value: num, display: num });
+                        if (num % 3 === 0) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Divisible by 3</strong>. All tiles with numbers divisible by 3 (3, 6, 9, 12...) were correct."
+            },
+            greaterThanTen: {
+                name: "Greater than 10",
+                hint: "Number Comparison",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    for (let i = 0; i < size * size; i++) {
+                        const num = Math.floor(Math.random() * 20) + 1;
+                        tiles.push({ type: 'number', value: num, display: num });
+                        if (num > 10) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Numbers Greater Than 10</strong>. All tiles with values above 10 were correct."
+            },
+            primeNumbers: {
+                name: "Prime Numbers",
+                hint: "Advanced Math",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const num = Math.floor(Math.random() * 32) + 1;
+                        tiles.push({ type: 'number', value: num, display: num });
+                        if (primes.includes(num)) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Prime Numbers</strong>. All tiles with prime numbers (2, 3, 5, 7, 11, 13...) were correct."
+            },
+
+            // Color-based patterns
+            warmColors: {
+                name: "Warm Colors",
+                hint: "Color Category",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const warmColors = [
+                        { name: '🔴', color: '#ff6b6b', isWarm: true },
+                        { name: '🟠', color: '#ff9f43', isWarm: true },
+                        { name: '🟡', color: '#ffd93d', isWarm: true },
+                        { name: '🟢', color: '#6bcf7f', isWarm: false },
+                        { name: '🔵', color: '#4d96ff', isWarm: false },
+                        { name: '🟣', color: '#a29bfe', isWarm: false }
+                    ];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const color = warmColors[Math.floor(Math.random() * warmColors.length)];
+                        tiles.push({ type: 'color', value: color.name, display: color.name, color: color.color });
+                        if (color.isWarm) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Warm Colors</strong>. All red, orange, and yellow tiles were correct."
+            },
+            coolColors: {
+                name: "Cool Colors",
+                hint: "Color Category",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const colors = [
+                        { name: '🔴', color: '#ff6b6b', isCool: false },
+                        { name: '🟠', color: '#ff9f43', isCool: false },
+                        { name: '🟡', color: '#ffd93d', isCool: false },
+                        { name: '🟢', color: '#6bcf7f', isCool: true },
+                        { name: '🔵', color: '#4d96ff', isCool: true },
+                        { name: '🟣', color: '#a29bfe', isCool: true }
+                    ];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        tiles.push({ type: 'color', value: color.name, display: color.name, color: color.color });
+                        if (color.isCool) correct.add(i);
+                    }
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Cool Colors</strong>. All green, blue, and purple tiles were correct."
+            },
+
+            // Position-based patterns
+            corners: {
+                name: "Corner Tiles",
+                hint: "Position Pattern",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const symbols = ['⭐', '💎', '🎯', '🎨', '🎪', '🎭', '🎮', '🎲'];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        tiles.push({ type: 'symbol', value: symbol, display: symbol });
+                    }
+
+                    // Corners: top-left, top-right, bottom-left, bottom-right
+                    correct.add(0);
+                    correct.add(size - 1);
+                    correct.add(size * (size - 1));
+                    correct.add(size * size - 1);
+
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Corner Tiles</strong>. Only the four corner positions were correct (top-left, top-right, bottom-left, bottom-right)."
+            },
+            edges: {
+                name: "Edge Tiles",
+                hint: "Position Pattern",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const symbols = ['⭐', '💎', '🎯', '🎨', '🎪', '🎭', '🎮', '🎲'];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const row = Math.floor(i / size);
+                        const col = i % size;
+                        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        tiles.push({ type: 'symbol', value: symbol, display: symbol });
+
+                        // Edge: first/last row or first/last column
+                        if (row === 0 || row === size - 1 || col === 0 || col === size - 1) {
+                            correct.add(i);
+                        }
+                    }
+
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Edge Tiles</strong>. All tiles on the outer edge of the grid were correct."
+            },
+            diagonal: {
+                name: "Main Diagonal",
+                hint: "Position Pattern",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const symbols = ['⭐', '💎', '🎯', '🎨', '🎪', '🎭', '🎮', '🎲'];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const row = Math.floor(i / size);
+                        const col = i % size;
+                        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        tiles.push({ type: 'symbol', value: symbol, display: symbol });
+
+                        // Main diagonal: row === col
+                        if (row === col) {
+                            correct.add(i);
+                        }
+                    }
+
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Main Diagonal</strong>. All tiles on the diagonal from top-left to bottom-right were correct."
+            },
+
+            // Symbol-based patterns
+            matchingSymbols: {
+                name: "Specific Symbol",
+                hint: "Symbol Matching",
+                generate: (size) => {
+                    const tiles = [];
+                    const correct = new Set();
+                    const symbols = ['⭐', '💎', '🎯', '🎨'];
+                    const targetSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+
+                    for (let i = 0; i < size * size; i++) {
+                        const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                        tiles.push({ type: 'symbol', value: symbol, display: symbol, target: targetSymbol });
+                        if (symbol === targetSymbol) correct.add(i);
+                    }
+
+                    return { tiles, correct };
+                },
+                explanation: "The pattern was: <strong>Matching Symbol</strong>. All tiles with the same specific symbol were correct."
+            }
+        };
+
+        /**
+         * Generate a new game with random pattern
+         */
+        function generateGame() {
+            // Select random pattern
+            const patternKeys = Object.keys(patterns);
+            const patternKey = patternKeys[Math.floor(Math.random() * patternKeys.length)];
+            currentPattern = patterns[patternKey];
+
+            // Generate tiles based on pattern
+            const result = currentPattern.generate(gridSize);
+            tiles = result.tiles;
+            correctTiles = result.correct;
+
+            // Reset game state
+            selectedTiles = new Set();
+            hasChecked = false;
+            patternRevealed = false;
+
+            // Update UI
+            updatePatternHint();
+            renderBoard();
+            updateStats();
+            hideMessage();
+            hideExplanation();
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('hintStatus').textContent = 'Pattern hidden - use logic to find it!';
+        }
+
+        /**
+         * Update the pattern hint display
+         */
+        function updatePatternHint() {
+            const hintText = document.getElementById('patternHintText');
+            hintText.textContent = patternRevealed ? currentPattern.name : currentPattern.hint;
+        }
+
+        /**
+         * Render the game board
+         */
+        function renderBoard() {
+            const board = document.getElementById('gameBoard');
+            board.innerHTML = '';
+            board.className = `game-board size-${gridSize}`;
+
+            tiles.forEach((tile, index) => {
+                const tileDiv = document.createElement('div');
+                tileDiv.className = 'tile';
+                tileDiv.dataset.index = index;
+                tileDiv.onclick = () => toggleTile(index);
+
+                if (tile.type === 'number') {
+                    tileDiv.innerHTML = `<div class="tile-value">${tile.display}</div>`;
+                } else if (tile.type === 'color') {
+                    tileDiv.innerHTML = `<div class="tile-icon">${tile.display}</div>`;
+                } else if (tile.type === 'symbol') {
+                    tileDiv.innerHTML = `<div class="tile-icon">${tile.display}</div>`;
+                }
+
+                if (selectedTiles.has(index)) {
+                    tileDiv.classList.add('selected');
+                }
+
+                board.appendChild(tileDiv);
+            });
+
+            updateProgressBar();
+        }
+
+        /**
+         * Toggle tile selection
+         * @param {number} index - Tile index
+         */
+        function toggleTile(index) {
+            if (hasChecked) return;
+
+            if (selectedTiles.has(index)) {
+                selectedTiles.delete(index);
+            } else {
+                selectedTiles.add(index);
+            }
+
+            renderBoard();
+            updateStats();
+        }
+
+        /**
+         * Update statistics display
+         */
+        function updateStats() {
+            document.getElementById('selectedCount').textContent = selectedTiles.size;
+            document.getElementById('targetCount').textContent = patternRevealed ? correctTiles.size : '?';
+            document.getElementById('score').textContent = score;
+        }
+
+        /**
+         * Update progress bar
+         */
+        function updateProgressBar() {
+            const progress = document.getElementById('progressFill');
+            const percentage = (selectedTiles.size / tiles.length) * 100;
+            progress.style.width = `${percentage}%`;
+        }
+
+        /**
+         * Reveal the pattern (hint)
+         */
+        function revealPattern() {
+            if (hasChecked) {
+                showMessage('Game already complete! Start a new game.', 'hint');
+                return;
+            }
+
+            patternRevealed = true;
+            updatePatternHint();
+            updateStats();
+            document.getElementById('hintStatus').textContent = `Pattern revealed: ${currentPattern.name}`;
+            showMessage(`💡 Pattern revealed: ${currentPattern.name}`, 'hint');
+        }
+
+        /**
+         * Check if the player's answer is correct
+         */
+        function checkAnswer() {
+            if (hasChecked) return;
+
+            hasChecked = true;
+            document.getElementById('checkBtn').disabled = true;
+
+            // Calculate results
+            const correctSelections = [...selectedTiles].filter(idx => correctTiles.has(idx));
+            const incorrectSelections = [...selectedTiles].filter(idx => !correctTiles.has(idx));
+            const missedTiles = [...correctTiles].filter(idx => !selectedTiles.has(idx));
+
+            // Visual feedback
+            tiles.forEach((tile, index) => {
+                const tileDiv = document.querySelector(`[data-index="${index}"]`);
+
+                if (correctSelections.includes(index)) {
+                    tileDiv.classList.add('correct');
+                } else if (incorrectSelections.includes(index)) {
+                    tileDiv.classList.add('incorrect');
+                } else if (missedTiles.includes(index)) {
+                    tileDiv.classList.add('missed');
+                }
+            });
+
+            // Calculate score
+            const accuracy = correctSelections.length / correctTiles.size;
+            const precision = selectedTiles.size > 0 ? correctSelections.length / selectedTiles.size : 0;
+            const finalScore = Math.round(((accuracy + precision) / 2) * 100);
+
+            // Show results
+            if (correctSelections.length === correctTiles.size && incorrectSelections.length === 0) {
+                // Perfect!
+                score += 100;
+                showMessage(`🎉 Perfect! You found all ${correctTiles.size} correct tiles! +100 points`, 'win');
+            } else if (accuracy >= 0.8 && precision >= 0.8) {
+                // Good
+                score += finalScore;
+                showMessage(`✓ Good job! ${correctSelections.length}/${correctTiles.size} correct, ${incorrectSelections.length} wrong. +${finalScore} points`, 'win');
+            } else {
+                // Try again
+                showMessage(`❌ Not quite! ${correctSelections.length}/${correctTiles.size} correct, ${incorrectSelections.length} wrong, ${missedTiles.length} missed.`, 'lose');
+            }
+
+            showExplanation();
+            updateStats();
+        }
+
+        /**
+         * Show the explanation
+         */
+        function showExplanation() {
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.innerHTML = `
+                <div class="explanation-title">💡 Pattern Explanation</div>
+                <div class="explanation-text">${currentPattern.explanation}</div>
+            `;
+            explanationDiv.classList.add('show');
+        }
+
+        /**
+         * Hide the explanation
+         */
+        function hideExplanation() {
+            document.getElementById('explanation').classList.remove('show');
+        }
+
+        /**
+         * Show a message to the player
+         * @param {string} text - Message text
+         * @param {string} type - Message type ('win', 'lose', or 'hint')
+         */
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} show`;
+
+            if (type === 'hint') {
+                setTimeout(() => {
+                    message.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        /**
+         * Hide the message
+         */
+        function hideMessage() {
+            document.getElementById('message').classList.remove('show');
+        }
+
+        /**
+         * Start a new game
+         */
+        function newGame() {
+            generateGame();
+        }
+
+        /**
+         * Handle difficulty selection
+         */
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                gridSize = parseInt(e.target.dataset.size);
+                generateGame();
+            });
+        });
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            generateGame();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathKen Logic Puzzle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 550px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2193b0;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .instructions {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2193b0;
+        }
+
+        .instructions h3 {
+            color: #2193b0;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .instructions ul {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.6;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .difficulty-btn {
+            padding: 8px 16px;
+            border: 2px solid #2193b0;
+            background: white;
+            color: #2193b0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: #2193b0;
+            color: white;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .puzzle-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .puzzle-board {
+            display: inline-grid;
+            gap: 0;
+            background: #333;
+            padding: 3px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .puzzle-board.size-3 {
+            grid-template-columns: repeat(3, 70px);
+            grid-template-rows: repeat(3, 70px);
+        }
+
+        .puzzle-board.size-4 {
+            grid-template-columns: repeat(4, 65px);
+            grid-template-rows: repeat(4, 65px);
+        }
+
+        .cell {
+            background: white;
+            border: 2px solid #333;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cell:hover {
+            background: #f0f8ff;
+        }
+
+        .cell.selected {
+            background: #ffe4b5;
+            box-shadow: inset 0 0 0 2px #ff8c00;
+        }
+
+        .cell.correct {
+            background: #d4edda;
+        }
+
+        .cell.incorrect {
+            background: #f8d7da;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .cage-label {
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            font-size: 0.7em;
+            font-weight: bold;
+            color: #333;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1px 3px;
+            border-radius: 3px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .cell-input {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2193b0;
+            border: none;
+            background: transparent;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .cell-input:focus {
+            color: #ff8c00;
+        }
+
+        /* Cage border styling */
+        .cage-1 { background: rgba(255, 182, 193, 0.3); }
+        .cage-2 { background: rgba(173, 216, 230, 0.3); }
+        .cage-3 { background: rgba(144, 238, 144, 0.3); }
+        .cage-4 { background: rgba(255, 218, 185, 0.3); }
+        .cage-5 { background: rgba(221, 160, 221, 0.3); }
+        .cage-6 { background: rgba(255, 255, 153, 0.3); }
+        .cage-7 { background: rgba(255, 192, 203, 0.3); }
+        .cage-8 { background: rgba(176, 224, 230, 0.3); }
+
+        .number-pad {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .num-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #2193b0;
+            background: white;
+            color: #2193b0;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .num-btn:hover {
+            background: #2193b0;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .num-btn:active {
+            transform: scale(0.95);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button.action-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2193b0, #6dd5ed);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 147, 176, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.win {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        /* Mobile optimization */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .puzzle-board.size-3 {
+                grid-template-columns: repeat(3, 60px);
+                grid-template-rows: repeat(3, 60px);
+            }
+
+            .puzzle-board.size-4 {
+                grid-template-columns: repeat(4, 55px);
+                grid-template-rows: repeat(4, 55px);
+            }
+
+            .cell-input {
+                font-size: 1.5em;
+            }
+
+            .num-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+
+        .legend {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 MathKen Puzzle</h1>
+        <p class="subtitle">A Mini Logic Math Challenge</p>
+
+        <div class="instructions">
+            <h3>📋 How to Play</h3>
+            <ul>
+                <li>Fill each row and column with unique numbers (1-3 or 1-4)</li>
+                <li>Each colored cage must satisfy its math rule</li>
+                <li>Example: "6+" means cage cells must add up to 6</li>
+                <li>Click a cell and use the number pad to fill it</li>
+            </ul>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-size="3">3×3 Grid</button>
+            <button class="difficulty-btn" data-size="4">4×4 Grid</button>
+        </div>
+
+        <div class="puzzle-container">
+            <div class="puzzle-board size-3" id="puzzleBoard">
+                <!-- Grid cells will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="number-pad" id="numberPad">
+            <!-- Number buttons will be generated by JavaScript -->
+        </div>
+
+        <div class="buttons">
+            <button class="action-btn btn-secondary" onclick="resetPuzzle()">🔄 New Puzzle</button>
+            <button class="action-btn btn-secondary" onclick="clearBoard()">🗑️ Clear</button>
+            <button class="action-btn btn-primary" onclick="checkSolution()">✓ Check Answer</button>
+        </div>
+
+        <div class="message" id="message"></div>
+
+        <p class="legend">Operators: + (add), - (subtract), × (multiply), ÷ (divide)</p>
+    </div>
+
+    <script>
+        // Game state
+        let gridSize = 3;
+        let selectedCell = null;
+        let puzzle = null;
+        let userBoard = [];
+
+        /**
+         * Cage structure: defines groups of cells with math operations
+         * cells: array of [row, col] positions
+         * target: the result number
+         * operation: +, -, ×, ÷
+         */
+
+        /**
+         * Generate a valid solved board using backtracking
+         * @param {number} size - Grid size (3 or 4)
+         * @returns {Array} - Solved board
+         */
+        function generateSolvedBoard(size) {
+            const board = Array(size).fill(null).map(() => Array(size).fill(0));
+
+            function isValid(board, row, col, num) {
+                // Check row uniqueness
+                for (let c = 0; c < size; c++) {
+                    if (board[row][c] === num) return false;
+                }
+                // Check column uniqueness
+                for (let r = 0; r < size; r++) {
+                    if (board[r][col] === num) return false;
+                }
+                return true;
+            }
+
+            function solve(board) {
+                for (let row = 0; row < size; row++) {
+                    for (let col = 0; col < size; col++) {
+                        if (board[row][col] === 0) {
+                            // Shuffle numbers for randomness
+                            const numbers = Array.from({length: size}, (_, i) => i + 1)
+                                .sort(() => Math.random() - 0.5);
+
+                            for (let num of numbers) {
+                                if (isValid(board, row, col, num)) {
+                                    board[row][col] = num;
+                                    if (solve(board)) return true;
+                                    board[row][col] = 0;
+                                }
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            solve(board);
+            return board;
+        }
+
+        /**
+         * Generate cages for the puzzle
+         * @param {Array} solution - The solved board
+         * @param {number} size - Grid size
+         * @returns {Array} - Array of cage objects
+         */
+        function generateCages(solution, size) {
+            const cages = [];
+            const used = Array(size).fill(null).map(() => Array(size).fill(false));
+            let cageId = 1;
+
+            // Helper to get adjacent cells
+            function getAdjacent(row, col) {
+                const adj = [];
+                const dirs = [[-1,0], [1,0], [0,-1], [0,1]];
+                for (let [dr, dc] of dirs) {
+                    const nr = row + dr, nc = col + dc;
+                    if (nr >= 0 && nr < size && nc >= 0 && nc < size && !used[nr][nc]) {
+                        adj.push([nr, nc]);
+                    }
+                }
+                return adj;
+            }
+
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    if (!used[row][col]) {
+                        const cells = [[row, col]];
+                        used[row][col] = true;
+
+                        // Randomly decide cage size (1-3 cells)
+                        const targetSize = Math.random() < 0.3 ? 1 : Math.random() < 0.6 ? 2 : 3;
+
+                        while (cells.length < targetSize && cells.length < 3) {
+                            const lastCell = cells[cells.length - 1];
+                            const adjacent = getAdjacent(lastCell[0], lastCell[1]);
+                            if (adjacent.length === 0) break;
+
+                            const next = adjacent[Math.floor(Math.random() * adjacent.length)];
+                            cells.push(next);
+                            used[next[0]][next[1]] = true;
+                        }
+
+                        // Get values for this cage
+                        const values = cells.map(([r, c]) => solution[r][c]);
+
+                        // Determine operation and target
+                        let operation, target;
+
+                        if (cells.length === 1) {
+                            // Single cell - no operation needed
+                            target = values[0];
+                            operation = '';
+                        } else if (cells.length === 2) {
+                            const ops = ['+', '-', '×', '÷'];
+                            operation = ops[Math.floor(Math.random() * ops.length)];
+
+                            switch(operation) {
+                                case '+':
+                                    target = values.reduce((a, b) => a + b, 0);
+                                    break;
+                                case '-':
+                                    target = Math.abs(values[0] - values[1]);
+                                    break;
+                                case '×':
+                                    target = values.reduce((a, b) => a * b, 1);
+                                    break;
+                                case '÷':
+                                    const [v1, v2] = values.sort((a, b) => b - a);
+                                    if (v1 % v2 === 0) {
+                                        target = v1 / v2;
+                                    } else {
+                                        operation = '+';
+                                        target = values.reduce((a, b) => a + b, 0);
+                                    }
+                                    break;
+                            }
+                        } else {
+                            // 3 cells - only use addition or multiplication
+                            operation = Math.random() < 0.7 ? '+' : '×';
+                            target = operation === '+'
+                                ? values.reduce((a, b) => a + b, 0)
+                                : values.reduce((a, b) => a * b, 1);
+                        }
+
+                        cages.push({
+                            id: cageId++,
+                            cells,
+                            target,
+                            operation
+                        });
+                    }
+                }
+            }
+
+            return cages;
+        }
+
+        /**
+         * Generate a complete puzzle
+         * @param {number} size - Grid size (3 or 4)
+         */
+        function generatePuzzle(size) {
+            const solution = generateSolvedBoard(size);
+            const cages = generateCages(solution, size);
+
+            puzzle = {
+                size,
+                solution,
+                cages
+            };
+
+            userBoard = Array(size).fill(null).map(() => Array(size).fill(0));
+        }
+
+        /**
+         * Render the puzzle board to the DOM
+         */
+        function renderBoard() {
+            const board = document.getElementById('puzzleBoard');
+            board.innerHTML = '';
+            board.className = `puzzle-board size-${gridSize}`;
+
+            // Create cells
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+
+                    // Find which cage this cell belongs to
+                    const cage = puzzle.cages.find(c =>
+                        c.cells.some(([r, c]) => r === row && c === col)
+                    );
+
+                    if (cage) {
+                        cell.classList.add(`cage-${cage.id}`);
+
+                        // Add cage label to first cell of the cage
+                        if (cage.cells[0][0] === row && cage.cells[0][1] === col) {
+                            const label = document.createElement('div');
+                            label.className = 'cage-label';
+                            label.textContent = `${cage.target}${cage.operation}`;
+                            cell.appendChild(label);
+                        }
+                    }
+
+                    // Create input
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'cell-input';
+                    input.maxLength = 1;
+                    input.value = userBoard[row][col] || '';
+                    input.addEventListener('click', () => selectCell(row, col));
+                    input.addEventListener('input', (e) => handleInput(e, row, col));
+                    input.addEventListener('keydown', (e) => handleKeyboard(e, row, col));
+
+                    cell.appendChild(input);
+                    board.appendChild(cell);
+                }
+            }
+
+            renderNumberPad();
+        }
+
+        /**
+         * Render the number pad
+         */
+        function renderNumberPad() {
+            const pad = document.getElementById('numberPad');
+            pad.innerHTML = '';
+
+            for (let i = 1; i <= gridSize; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'num-btn';
+                btn.textContent = i;
+                btn.onclick = () => insertNumber(i);
+                pad.appendChild(btn);
+            }
+
+            // Add clear button
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'num-btn';
+            clearBtn.textContent = '×';
+            clearBtn.onclick = () => insertNumber(0);
+            pad.appendChild(clearBtn);
+        }
+
+        /**
+         * Select a cell
+         * @param {number} row - Row index
+         * @param {number} col - Column index
+         */
+        function selectCell(row, col) {
+            // Remove previous selection
+            document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+
+            // Add selection to current cell
+            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            cell.classList.add('selected');
+
+            selectedCell = { row, col };
+
+            // Focus the input
+            const input = cell.querySelector('.cell-input');
+            input.focus();
+        }
+
+        /**
+         * Insert a number into the selected cell
+         * @param {number} num - Number to insert (0 to clear)
+         */
+        function insertNumber(num) {
+            if (!selectedCell) {
+                showMessage('Please select a cell first', 'error');
+                return;
+            }
+
+            const { row, col } = selectedCell;
+            userBoard[row][col] = num;
+
+            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            const input = cell.querySelector('.cell-input');
+            input.value = num || '';
+
+            // Move to next cell
+            moveToNextCell(row, col);
+        }
+
+        /**
+         * Handle direct keyboard input
+         * @param {Event} e - Input event
+         * @param {number} row - Row index
+         * @param {number} col - Column index
+         */
+        function handleInput(e, row, col) {
+            const value = e.target.value;
+            const num = parseInt(value);
+
+            if (value === '' || value === '0') {
+                userBoard[row][col] = 0;
+                e.target.value = '';
+            } else if (num >= 1 && num <= gridSize) {
+                userBoard[row][col] = num;
+                e.target.value = num;
+                moveToNextCell(row, col);
+            } else {
+                e.target.value = userBoard[row][col] || '';
+            }
+        }
+
+        /**
+         * Handle keyboard navigation
+         * @param {Event} e - Keyboard event
+         * @param {number} row - Current row
+         * @param {number} col - Current column
+         */
+        function handleKeyboard(e, row, col) {
+            let newRow = row, newCol = col;
+
+            switch(e.key) {
+                case 'ArrowUp':
+                    newRow = Math.max(0, row - 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowDown':
+                    newRow = Math.min(gridSize - 1, row + 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowLeft':
+                    newCol = Math.max(0, col - 1);
+                    e.preventDefault();
+                    break;
+                case 'ArrowRight':
+                    newCol = Math.min(gridSize - 1, col + 1);
+                    e.preventDefault();
+                    break;
+                case 'Backspace':
+                case 'Delete':
+                    userBoard[row][col] = 0;
+                    e.target.value = '';
+                    e.preventDefault();
+                    break;
+            }
+
+            if (newRow !== row || newCol !== col) {
+                selectCell(newRow, newCol);
+            }
+        }
+
+        /**
+         * Move to the next empty cell
+         * @param {number} currentRow - Current row
+         * @param {number} currentCol - Current column
+         */
+        function moveToNextCell(currentRow, currentCol) {
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    // Skip until we reach the current cell
+                    if (row < currentRow || (row === currentRow && col <= currentCol)) {
+                        continue;
+                    }
+
+                    if (userBoard[row][col] === 0) {
+                        selectCell(row, col);
+                        return;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Check if the user's solution is correct
+         */
+        function checkSolution() {
+            let allFilled = true;
+            let allCorrect = true;
+
+            // Clear previous styling
+            document.querySelectorAll('.cell').forEach(c => {
+                c.classList.remove('correct', 'incorrect');
+            });
+
+            // Check if all cells are filled
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    if (userBoard[row][col] === 0) {
+                        allFilled = false;
+                    }
+                }
+            }
+
+            if (!allFilled) {
+                showMessage('Please fill all cells before checking!', 'error');
+                return;
+            }
+
+            // Check rows and columns
+            for (let i = 0; i < gridSize; i++) {
+                // Check row
+                const row = userBoard[i];
+                if (new Set(row).size !== gridSize || row.includes(0)) {
+                    allCorrect = false;
+                }
+
+                // Check column
+                const col = userBoard.map(r => r[i]);
+                if (new Set(col).size !== gridSize || col.includes(0)) {
+                    allCorrect = false;
+                }
+            }
+
+            // Check cages
+            for (let cage of puzzle.cages) {
+                const values = cage.cells.map(([r, c]) => userBoard[r][c]);
+                let result;
+
+                switch(cage.operation) {
+                    case '':
+                        result = values[0];
+                        break;
+                    case '+':
+                        result = values.reduce((a, b) => a + b, 0);
+                        break;
+                    case '-':
+                        result = Math.abs(values[0] - values[1]);
+                        break;
+                    case '×':
+                        result = values.reduce((a, b) => a * b, 1);
+                        break;
+                    case '÷':
+                        const [v1, v2] = values.sort((a, b) => b - a);
+                        result = v1 / v2;
+                        break;
+                }
+
+                if (result !== cage.target) {
+                    allCorrect = false;
+                    // Mark cage cells as incorrect
+                    cage.cells.forEach(([r, c]) => {
+                        const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+                        cell.classList.add('incorrect');
+                    });
+                }
+            }
+
+            if (allCorrect) {
+                // Mark all cells as correct
+                document.querySelectorAll('.cell').forEach(c => {
+                    c.classList.add('correct');
+                });
+                showMessage('🎉 Congratulations! You solved the puzzle!', 'win');
+            } else {
+                showMessage('❌ Not quite right. Check the red cages!', 'error');
+                setTimeout(() => {
+                    document.querySelectorAll('.cell').forEach(c => {
+                        c.classList.remove('incorrect');
+                    });
+                }, 2000);
+            }
+        }
+
+        /**
+         * Clear the board
+         */
+        function clearBoard() {
+            userBoard = Array(gridSize).fill(null).map(() => Array(gridSize).fill(0));
+            renderBoard();
+            hideMessage();
+        }
+
+        /**
+         * Reset puzzle with new generation
+         */
+        function resetPuzzle() {
+            generatePuzzle(gridSize);
+            renderBoard();
+            hideMessage();
+            selectedCell = null;
+        }
+
+        /**
+         * Show a message to the player
+         * @param {string} text - Message text
+         * @param {string} type - Message type ('win' or 'error')
+         */
+        function showMessage(text, type) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.className = `message ${type} show`;
+        }
+
+        /**
+         * Hide the message
+         */
+        function hideMessage() {
+            const message = document.getElementById('message');
+            message.classList.remove('show');
+        }
+
+        /**
+         * Handle difficulty selection
+         */
+        document.querySelectorAll('.difficulty-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                gridSize = parseInt(e.target.dataset.size);
+                resetPuzzle();
+            });
+        });
+
+        // Initialize the game when the page loads
+        window.onload = () => {
+            generatePuzzle(gridSize);
+            renderBoard();
+        };
+    </script>
+</body>
+</html>
