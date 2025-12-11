@@ -219,6 +219,9 @@
         .game-card:nth-child(4) { animation: fadeInCard 0.6s ease 0.4s both; }
         .game-card:nth-child(5) { animation: fadeInCard 0.6s ease 0.5s both; }
         .game-card:nth-child(6) { animation: fadeInCard 0.6s ease 0.6s both; }
+        .game-card:nth-child(7) { animation: fadeInCard 0.6s ease 0.7s both; }
+        .game-card:nth-child(8) { animation: fadeInCard 0.6s ease 0.8s both; }
+        .game-card:nth-child(9) { animation: fadeInCard 0.6s ease 0.9s both; }
 
         @keyframes fadeInCard {
             from { opacity: 0; transform: translateY(60px) scale(0.9); }
@@ -823,6 +826,382 @@
             font-weight: 500;
         }
 
+        /* Logic Grid */
+        .logic-grid-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .grid-labels {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding: 0 20px;
+        }
+
+        .grid-label {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+            text-align: center;
+            flex: 1;
+        }
+
+        .logic-grid {
+            display: grid;
+            gap: 8px;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logic-grid.size-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .logic-grid.size-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .grid-cell {
+            aspect-ratio: 1;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .grid-cell:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .grid-cell.marked {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+            color: white;
+        }
+
+        .grid-cell.correct {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: #28a745;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .grid-cell.incorrect {
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .grid-cell.missed {
+            background: linear-gradient(135deg, #ffc107, #ff9800);
+            border-color: #ffc107;
+            animation: pulse 0.8s ease;
+        }
+
+        .clues-container {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 6px solid #2196f3;
+        }
+
+        .clues-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+
+        .clue-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clue-list li {
+            background: white;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border-radius: 10px;
+            color: #0d47a1;
+            font-weight: 500;
+            font-size: 1.05em;
+            line-height: 1.6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .clue-list li::before {
+            content: "• ";
+            color: #2196f3;
+            font-weight: bold;
+            font-size: 1.4em;
+            margin-right: 8px;
+        }
+
+        /* Math Fill */
+        .equation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .equation-part {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .equation-blank {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 4px dashed #ffc107;
+            border-radius: 15px;
+            padding: 20px 30px;
+            min-width: 100px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #856404;
+            animation: pulse 2s infinite;
+            position: relative;
+        }
+
+        .equation-blank.filled {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: 4px solid #667eea;
+            color: white;
+            animation: none;
+        }
+
+        .equation-blank.correct {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: #28a745;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .equation-blank.incorrect {
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .operator-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .operator-btn {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 20px 35px;
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .operator-btn:hover {
+            transform: scale(1.1);
+            background: #667eea;
+            color: white;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .operator-btn.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .number-input {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .number-btn {
+            background: white;
+            border: 3px solid #17a2b8;
+            border-radius: 12px;
+            padding: 18px 28px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #17a2b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 70px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .number-btn:hover {
+            transform: scale(1.08);
+            background: #17a2b8;
+            color: white;
+            box-shadow: 0 6px 18px rgba(23, 162, 184, 0.4);
+        }
+
+        .input-section-title {
+            text-align: center;
+            color: #667eea;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin: 30px 0 15px;
+        }
+
+        /* Logic Path Maze */
+        .maze-grid {
+            display: grid;
+            gap: 8px;
+            max-width: 500px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .maze-grid.size-5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+
+        .maze-grid.size-6 {
+            grid-template-columns: repeat(6, 1fr);
+        }
+
+        .maze-tile {
+            aspect-ratio: 1;
+            border: 3px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        .maze-tile.start {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border-color: #28a745;
+            animation: glow 2s infinite;
+        }
+
+        .maze-tile.end {
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+            color: white;
+            border-color: #dc3545;
+            animation: glow 2s infinite;
+        }
+
+        .maze-tile.blocked {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .maze-tile:not(.blocked):not(.start):not(.end):hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .maze-tile.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            animation: pulse 1s infinite;
+        }
+
+        .maze-tile.correct-path {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-color: #28a745;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .maze-tile.wrong-path {
+            background: linear-gradient(135deg, #dc3545, #ff6b6b);
+            border-color: #dc3545;
+            animation: shake 0.5s ease;
+        }
+
+        .tile-number {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .tile-symbol {
+            font-size: 1.2em;
+            margin-top: 4px;
+        }
+
+        .path-counter {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .rule-display {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 6px solid #2196f3;
+            text-align: center;
+        }
+
+        .rule-display h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .rule-display p {
+            color: #0d47a1;
+            font-weight: 500;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
         /* ==================== RESPONSIVE DESIGN ==================== */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.8em; }
@@ -838,6 +1217,15 @@
             .operator-box { font-size: 2em; }
             .symbol-choice { font-size: 2.2em; padding: 18px; min-height: 80px; }
             .clue-symbol { font-size: 1.6em; }
+            .grid-cell { font-size: 2em; }
+            .grid-label { font-size: 1em; }
+            .equation-part { font-size: 2.5em; min-width: 60px; }
+            .equation-blank { font-size: 2em; padding: 15px 20px; min-width: 80px; min-height: 80px; }
+            .operator-btn { font-size: 2em; padding: 15px 25px; }
+            .number-btn { font-size: 1.6em; padding: 14px 22px; min-width: 60px; }
+            .maze-tile { font-size: 1.6em; }
+            .tile-number { font-size: 1.2em; }
+            .tile-symbol { font-size: 1em; }
         }
     </style>
 </head>
@@ -905,6 +1293,24 @@
                         <div class="game-icon">🔣</div>
                         <div class="game-title">Symbol Decoder</div>
                         <div class="game-desc">Decode the hidden logic! Each symbol represents a number. Find the missing symbol using deduction!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game7')">
+                        <div class="game-icon">📊</div>
+                        <div class="game-title">Logic Grid</div>
+                        <div class="game-desc">Use deductive reasoning to solve the grid! Read the clues and mark the correct cells!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game8')">
+                        <div class="game-icon">🧮</div>
+                        <div class="game-title">Math Fill</div>
+                        <div class="game-desc">Fill in the missing numbers and operators to complete the equation correctly!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game9')">
+                        <div class="game-icon">🗺️</div>
+                        <div class="game-title">Logic Path Maze</div>
+                        <div class="game-desc">Navigate through the maze by following the correct sequence! Only one path leads to victory!</div>
                     </div>
                 </div>
             </section>
@@ -1112,6 +1518,116 @@
         </div>
     </div>
 
+    <!-- ==================== GAME 7: LOGIC GRID ==================== -->
+    <div id="game7" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+                <div class="game-header">
+                    <h1>📊 Logic Grid Puzzle</h1>
+                    <p class="game-subtitle">Solve with pure deduction!</p>
+                </div>
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Read the clues carefully and use logic to deduce which cells in the grid are correct. Click cells to mark them, then check your answer!</p>
+                </div>
+
+                <div class="clues-container">
+                    <div class="clues-title">🔍 Clues</div>
+                    <ul class="clue-list" id="clue-list"></ul>
+                </div>
+
+                <div class="game-board">
+                    <div class="logic-grid-container">
+                        <div class="grid-labels" id="grid-labels"></div>
+                        <div class="logic-grid size-3" id="logic-grid"></div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Marked</div>
+                        <div class="stat-value" id="marked-count">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Required</div>
+                        <div class="stat-value" id="required-count">?</div>
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame7()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame7()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message7"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 8: MATH FILL ==================== -->
+    <div id="game8" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+                <div class="game-header">
+                    <h1>🧮 Math Fill Puzzle</h1>
+                    <p class="game-subtitle">Complete the equation!</p>
+                </div>
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Fill in the missing numbers or operators to make the equation correct. Select a number or operator, then click Check Answer to see if you're right!</p>
+                </div>
+
+                <div class="game-board">
+                    <div class="equation-container" id="equation-display"></div>
+                </div>
+
+                <div id="input-area"></div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame8()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame8()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message8"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME 9: LOGIC PATH MAZE ==================== -->
+    <div id="game9" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+                <div class="game-header">
+                    <h1>🗺️ Logic Path Maze</h1>
+                    <p class="game-subtitle">Find the correct path!</p>
+                </div>
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Navigate from START to END by clicking tiles in the correct sequence. Follow the rule shown below to find the valid path!</p>
+                </div>
+
+                <div class="rule-display" id="rule-display"></div>
+
+                <div class="path-counter" id="path-counter">Path Length: 0</div>
+
+                <div class="game-board">
+                    <div class="maze-grid size-5" id="maze-grid"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame9()">🔄 New Maze</button>
+                    <button class="btn-secondary" onclick="clearPath9()" style="background: #ffc107; border-color: #ffc107;">⟲ Clear Path</button>
+                    <button class="btn-primary" onclick="checkGame9()">✓ Check Path</button>
+                </div>
+
+                <div class="message" id="message9"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         'use strict';
 
@@ -1128,6 +1644,9 @@
             if (screenId === 'game4' && !game4State.initialized) resetGame4();
             if (screenId === 'game5' && !game5State.initialized) resetGame5();
             if (screenId === 'game6' && !game6State.initialized) resetGame6();
+            if (screenId === 'game7' && !game7State.initialized) resetGame7();
+            if (screenId === 'game8' && !game8State.initialized) resetGame8();
+            if (screenId === 'game9' && !game9State.initialized) resetGame9();
         }
 
         function scrollToGames() {
@@ -1640,6 +2159,739 @@
                     }
                 });
                 showMessage(6, `❌ Wrong! The correct answer is ${game6State.correctAnswer} = ${game6State.symbolValues[game6State.correctAnswer]}`, 'lose');
+            }
+        }
+
+        // ==================== GAME 7: LOGIC GRID ====================
+        const game7State = {
+            initialized: false,
+            gridSize: 3,
+            correctCells: new Set(),
+            markedCells: new Set(),
+            categories: [],
+            items: [],
+            clues: []
+        };
+
+        function resetGame7() {
+            game7State.initialized = true;
+            game7State.markedCells = new Set();
+            game7State.gridSize = Math.random() < 0.5 ? 3 : 4;
+
+            // Generate categories and items
+            if (game7State.gridSize === 3) {
+                game7State.categories = ['Color', 'Size', 'Shape'];
+                game7State.items = [
+                    ['Red', 'Blue', 'Green'],
+                    ['Small', 'Medium', 'Large'],
+                    ['Circle', 'Square', 'Triangle']
+                ];
+            } else {
+                game7State.categories = ['Color', 'Animal', 'Food', 'Place'];
+                game7State.items = [
+                    ['Red', 'Blue', 'Yellow', 'Green'],
+                    ['Cat', 'Dog', 'Bird', 'Fish'],
+                    ['Pizza', 'Burger', 'Salad', 'Pasta'],
+                    ['Park', 'Beach', 'Mall', 'Home']
+                ];
+            }
+
+            // Generate solution
+            generateLogicPuzzle();
+            renderGame7();
+            hideMessage(7);
+        }
+
+        function generateLogicPuzzle() {
+            const size = game7State.gridSize;
+            game7State.correctCells = new Set();
+            game7State.clues = [];
+
+            // Create a valid solution pattern
+            const solution = [];
+            for (let i = 0; i < size; i++) {
+                const row = Math.floor(Math.random() * size);
+                const col = Math.floor(Math.random() * size);
+                const cellId = `${row}-${col}`;
+                solution.push({row, col, cellId});
+                game7State.correctCells.add(cellId);
+            }
+
+            // Generate clues based on the solution
+            const clueTemplates = [
+                (r, c) => `Row ${r + 1}, Column ${c + 1} is correct`,
+                (r, c) => `The cell at position (${r + 1}, ${c + 1}) should be marked`,
+                (r, c) => {
+                    const item1 = game7State.items[0][r];
+                    const item2 = game7State.items[1][c];
+                    return `${item1} is paired with ${item2}`;
+                },
+                (r, c) => {
+                    if (size === 3) {
+                        const shape = game7State.items[2][r];
+                        const size_name = game7State.items[1][c];
+                        return `${shape} objects are ${size_name}`;
+                    } else {
+                        const food = game7State.items[2][r];
+                        const place = game7State.items[3][c];
+                        return `${food} is eaten at ${place}`;
+                    }
+                }
+            ];
+
+            // Generate 3-5 clues
+            const numClues = 3 + Math.floor(Math.random() * 3);
+            const usedClues = new Set();
+
+            for (let i = 0; i < numClues && i < solution.length; i++) {
+                const {row, col} = solution[i];
+                const templateIndex = Math.floor(Math.random() * clueTemplates.length);
+                const clueText = clueTemplates[templateIndex](row, col);
+
+                if (!usedClues.has(clueText)) {
+                    game7State.clues.push(clueText);
+                    usedClues.add(clueText);
+                }
+            }
+
+            // Add some deductive clues
+            if (solution.length >= 2) {
+                const {row: r1, col: c1} = solution[0];
+                const {row: r2, col: c2} = solution[1];
+
+                if (r1 === r2) {
+                    game7State.clues.push(`Row ${r1 + 1} has multiple correct cells`);
+                } else if (c1 === c2) {
+                    game7State.clues.push(`Column ${c1 + 1} has multiple correct cells`);
+                }
+
+                // Add exclusion clue
+                const wrongRow = (r1 + 1) % size;
+                const wrongCol = (c1 + 1) % size;
+                game7State.clues.push(`Position (${wrongRow + 1}, ${wrongCol + 1}) is NOT correct`);
+            }
+        }
+
+        function renderGame7() {
+            const size = game7State.gridSize;
+
+            // Render labels
+            const labelsDiv = document.getElementById('grid-labels');
+            labelsDiv.innerHTML = '';
+            game7State.categories.slice(0, size).forEach((cat, idx) => {
+                const label = document.createElement('div');
+                label.className = 'grid-label';
+                label.textContent = cat;
+                labelsDiv.appendChild(label);
+            });
+
+            // Render grid
+            const grid = document.getElementById('logic-grid');
+            grid.className = `logic-grid size-${size}`;
+            grid.innerHTML = '';
+
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    const cellId = `${row}-${col}`;
+
+                    if (game7State.markedCells.has(cellId)) {
+                        cell.classList.add('marked');
+                        cell.textContent = '✓';
+                    }
+
+                    cell.onclick = () => toggleCell(cellId);
+                    grid.appendChild(cell);
+                }
+            }
+
+            // Render clues
+            const cluesList = document.getElementById('clue-list');
+            cluesList.innerHTML = '';
+            game7State.clues.forEach(clue => {
+                const li = document.createElement('li');
+                li.textContent = clue;
+                cluesList.appendChild(li);
+            });
+
+            // Update stats
+            document.getElementById('marked-count').textContent = game7State.markedCells.size;
+            document.getElementById('required-count').textContent = game7State.correctCells.size;
+        }
+
+        function toggleCell(cellId) {
+            if (game7State.markedCells.has(cellId)) {
+                game7State.markedCells.delete(cellId);
+            } else {
+                game7State.markedCells.add(cellId);
+            }
+            renderGame7();
+        }
+
+        function checkGame7() {
+            const cells = document.querySelectorAll('.grid-cell');
+            const size = game7State.gridSize;
+
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let missedCount = 0;
+
+            for (let row = 0; row < size; row++) {
+                for (let col = 0; col < size; col++) {
+                    const cellId = `${row}-${col}`;
+                    const cellIndex = row * size + col;
+                    const cell = cells[cellIndex];
+
+                    if (game7State.markedCells.has(cellId)) {
+                        if (game7State.correctCells.has(cellId)) {
+                            cell.classList.add('correct');
+                            correctCount++;
+                        } else {
+                            cell.classList.add('incorrect');
+                            incorrectCount++;
+                        }
+                    } else if (game7State.correctCells.has(cellId)) {
+                        cell.classList.add('missed');
+                        missedCount++;
+                    }
+                }
+            }
+
+            if (correctCount === game7State.correctCells.size && incorrectCount === 0 && missedCount === 0) {
+                showMessage(7, `🎉 Perfect! You found all ${correctCount} correct cells!`, 'win');
+            } else {
+                showMessage(7, `❌ Not quite! Correct: ${correctCount}, Wrong: ${incorrectCount}, Missed: ${missedCount}`, 'lose');
+            }
+        }
+
+        // ==================== GAME 8: MATH FILL ====================
+        const game8State = {
+            initialized: false,
+            equation: [],
+            missingIndex: -1,
+            missingType: '',
+            correctAnswer: null,
+            userAnswer: null
+        };
+
+        function resetGame8() {
+            game8State.initialized = true;
+            game8State.userAnswer = null;
+            hideMessage(8);
+
+            // Generate random equation
+            const puzzleType = Math.random() < 0.5 ? 'number' : 'operator';
+            game8State.missingType = puzzleType;
+
+            if (puzzleType === 'number') {
+                // Missing number puzzle
+                const operators = ['+', '-', '*'];
+                const op = operators[Math.floor(Math.random() * operators.length)];
+
+                let num1, num2, result;
+
+                if (op === '+') {
+                    num1 = Math.floor(Math.random() * 20) + 1;
+                    num2 = Math.floor(Math.random() * 20) + 1;
+                    result = num1 + num2;
+                } else if (op === '-') {
+                    result = Math.floor(Math.random() * 20) + 1;
+                    num2 = Math.floor(Math.random() * result);
+                    num1 = result + num2;
+                } else { // *
+                    num1 = Math.floor(Math.random() * 10) + 1;
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    result = num1 * num2;
+                }
+
+                // Randomly choose which number to hide
+                const hidePos = Math.floor(Math.random() * 3);
+
+                if (hidePos === 0) {
+                    game8State.equation = ['?', op, num2, '=', result];
+                    game8State.correctAnswer = num1;
+                    game8State.missingIndex = 0;
+                } else if (hidePos === 1) {
+                    game8State.equation = [num1, op, '?', '=', result];
+                    game8State.correctAnswer = num2;
+                    game8State.missingIndex = 2;
+                } else {
+                    game8State.equation = [num1, op, num2, '=', '?'];
+                    game8State.correctAnswer = result;
+                    game8State.missingIndex = 4;
+                }
+            } else {
+                // Missing operator puzzle
+                const num1 = Math.floor(Math.random() * 15) + 1;
+                const operators = ['+', '-', '*'];
+                const correctOp = operators[Math.floor(Math.random() * operators.length)];
+
+                let num2, result;
+
+                if (correctOp === '+') {
+                    num2 = Math.floor(Math.random() * 15) + 1;
+                    result = num1 + num2;
+                } else if (correctOp === '-') {
+                    num2 = Math.floor(Math.random() * num1);
+                    result = num1 - num2;
+                } else { // *
+                    num2 = Math.floor(Math.random() * 10) + 1;
+                    result = num1 * num2;
+                }
+
+                game8State.equation = [num1, '?', num2, '=', result];
+                game8State.correctAnswer = correctOp;
+                game8State.missingIndex = 1;
+            }
+
+            renderGame8();
+        }
+
+        function renderGame8() {
+            const display = document.getElementById('equation-display');
+            const inputArea = document.getElementById('input-area');
+
+            display.innerHTML = '';
+
+            game8State.equation.forEach((part, index) => {
+                if (part === '?') {
+                    const blank = document.createElement('div');
+                    blank.className = 'equation-blank';
+                    blank.id = 'blank8';
+                    blank.textContent = game8State.userAnswer !== null ? game8State.userAnswer : '?';
+                    if (game8State.userAnswer !== null) blank.classList.add('filled');
+                    display.appendChild(blank);
+                } else {
+                    const partDiv = document.createElement('div');
+                    partDiv.className = 'equation-part';
+                    partDiv.textContent = part;
+                    display.appendChild(partDiv);
+                }
+            });
+
+            // Render input controls
+            inputArea.innerHTML = '';
+
+            if (game8State.missingType === 'operator') {
+                const title = document.createElement('div');
+                title.className = 'input-section-title';
+                title.textContent = 'Select the correct operator:';
+                inputArea.appendChild(title);
+
+                const selector = document.createElement('div');
+                selector.className = 'operator-selector';
+
+                ['+', '-', '*'].forEach(op => {
+                    const btn = document.createElement('div');
+                    btn.className = 'operator-btn';
+                    btn.textContent = op;
+                    if (game8State.userAnswer === op) btn.classList.add('selected');
+                    btn.onclick = () => selectOperator8(op);
+                    selector.appendChild(btn);
+                });
+
+                inputArea.appendChild(selector);
+            } else {
+                const title = document.createElement('div');
+                title.className = 'input-section-title';
+                title.textContent = 'Select the correct number:';
+                inputArea.appendChild(title);
+
+                const numberInput = document.createElement('div');
+                numberInput.className = 'number-input';
+
+                // Generate number options based on the correct answer
+                const correct = game8State.correctAnswer;
+                const options = new Set([correct]);
+
+                // Add similar numbers
+                for (let i = 0; i < 7; i++) {
+                    const offset = Math.floor(Math.random() * 10) - 5;
+                    const num = correct + offset;
+                    if (num > 0 && num <= 100) options.add(num);
+                }
+
+                const sortedOptions = Array.from(options).sort((a, b) => a - b).slice(0, 8);
+
+                sortedOptions.forEach(num => {
+                    const btn = document.createElement('div');
+                    btn.className = 'number-btn';
+                    btn.textContent = num;
+                    btn.onclick = () => selectNumber8(num);
+                    numberInput.appendChild(btn);
+                });
+
+                inputArea.appendChild(numberInput);
+            }
+        }
+
+        function selectOperator8(op) {
+            game8State.userAnswer = op;
+            renderGame8();
+        }
+
+        function selectNumber8(num) {
+            game8State.userAnswer = num;
+            renderGame8();
+        }
+
+        function checkGame8() {
+            if (game8State.userAnswer === null) {
+                showMessage(8, '⚠️ Please select an answer first!', 'lose');
+                return;
+            }
+
+            const blank = document.getElementById('blank8');
+
+            if (game8State.userAnswer === game8State.correctAnswer) {
+                blank.classList.remove('incorrect');
+                blank.classList.add('correct');
+                showMessage(8, `🎉 Correct! The answer is ${game8State.correctAnswer}!`, 'win');
+            } else {
+                blank.classList.remove('correct');
+                blank.classList.add('incorrect');
+                showMessage(8, `❌ Wrong! The correct answer is ${game8State.correctAnswer}. Try a new puzzle!`, 'lose');
+            }
+        }
+
+        // ==================== GAME 9: LOGIC PATH MAZE ====================
+        const game9State = {
+            initialized: false,
+            gridSize: 5,
+            tiles: [],
+            startPos: null,
+            endPos: null,
+            correctPath: [],
+            userPath: [],
+            ruleType: '',
+            ruleDescription: ''
+        };
+
+        function resetGame9() {
+            game9State.initialized = true;
+            game9State.userPath = [];
+            hideMessage(9);
+
+            // Choose grid size (5x5 or 6x6)
+            game9State.gridSize = Math.random() < 0.6 ? 5 : 6;
+            const size = game9State.gridSize;
+
+            // Choose rule type
+            const ruleTypes = ['numbers', 'evens', 'multiples', 'increasing'];
+            game9State.ruleType = ruleTypes[Math.floor(Math.random() * ruleTypes.length)];
+
+            // Initialize grid
+            game9State.tiles = [];
+            for (let i = 0; i < size * size; i++) {
+                game9State.tiles.push({
+                    id: i,
+                    number: 0,
+                    symbol: '',
+                    isStart: false,
+                    isEnd: false,
+                    isBlocked: false,
+                    isValid: false
+                });
+            }
+
+            // Set start (top-left area)
+            game9State.startPos = Math.random() < 0.5 ? 0 : 1;
+            game9State.tiles[game9State.startPos].isStart = true;
+            game9State.tiles[game9State.startPos].number = -1;
+
+            // Set end (bottom-right area)
+            const endOptions = [size * size - 1, size * size - 2, size * size - size - 1];
+            game9State.endPos = endOptions[Math.floor(Math.random() * endOptions.length)];
+            game9State.tiles[game9State.endPos].isEnd = true;
+            game9State.tiles[game9State.endPos].number = -1;
+
+            // Generate path and numbers based on rule
+            generateMazePath9();
+            renderGame9();
+        }
+
+        function generateMazePath9() {
+            const size = game9State.gridSize;
+
+            if (game9State.ruleType === 'numbers') {
+                // Rule: Follow numbers 1, 2, 3, 4...
+                game9State.ruleDescription = 'Follow tiles numbered in ascending order (1 → 2 → 3 → ...)';
+
+                // Generate correct path using BFS
+                const path = findPath9(game9State.startPos, game9State.endPos, size);
+                game9State.correctPath = path;
+
+                // Assign numbers to path
+                for (let i = 1; i < path.length - 1; i++) {
+                    game9State.tiles[path[i]].number = i;
+                    game9State.tiles[path[i]].isValid = true;
+                }
+
+                // Fill other tiles with random numbers
+                for (let i = 0; i < size * size; i++) {
+                    if (!game9State.tiles[i].isStart && !game9State.tiles[i].isEnd && game9State.tiles[i].number === 0) {
+                        game9State.tiles[i].number = Math.floor(Math.random() * (path.length - 1)) + 1;
+                    }
+                }
+
+            } else if (game9State.ruleType === 'evens') {
+                // Rule: Only step on even numbers
+                game9State.ruleDescription = 'Step only on tiles with EVEN numbers';
+
+                const path = findPath9(game9State.startPos, game9State.endPos, size);
+                game9State.correctPath = path;
+
+                // Mark path tiles as valid and assign even numbers
+                for (let i = 1; i < path.length - 1; i++) {
+                    game9State.tiles[path[i]].number = (Math.floor(Math.random() * 5) + 1) * 2;
+                    game9State.tiles[path[i]].isValid = true;
+                }
+
+                // Fill other tiles with mix of even and odd
+                for (let i = 0; i < size * size; i++) {
+                    if (!game9State.tiles[i].isStart && !game9State.tiles[i].isEnd && game9State.tiles[i].number === 0) {
+                        game9State.tiles[i].number = Math.random() < 0.6 ? Math.floor(Math.random() * 5) * 2 + 1 : (Math.floor(Math.random() * 5) + 1) * 2;
+                    }
+                }
+
+            } else if (game9State.ruleType === 'multiples') {
+                // Rule: Only step on multiples of 3
+                game9State.ruleDescription = 'Step only on tiles with numbers divisible by 3';
+
+                const path = findPath9(game9State.startPos, game9State.endPos, size);
+                game9State.correctPath = path;
+
+                for (let i = 1; i < path.length - 1; i++) {
+                    game9State.tiles[path[i]].number = (Math.floor(Math.random() * 5) + 1) * 3;
+                    game9State.tiles[path[i]].isValid = true;
+                }
+
+                for (let i = 0; i < size * size; i++) {
+                    if (!game9State.tiles[i].isStart && !game9State.tiles[i].isEnd && game9State.tiles[i].number === 0) {
+                        const rand = Math.floor(Math.random() * 15) + 1;
+                        game9State.tiles[i].number = rand % 3 === 0 ? rand : rand + 1;
+                    }
+                }
+
+            } else if (game9State.ruleType === 'increasing') {
+                // Rule: Each step must be a higher number
+                game9State.ruleDescription = 'Each tile must have a HIGHER number than the previous';
+
+                const path = findPath9(game9State.startPos, game9State.endPos, size);
+                game9State.correctPath = path;
+
+                let currentNum = 1;
+                for (let i = 1; i < path.length - 1; i++) {
+                    currentNum += Math.floor(Math.random() * 3) + 1;
+                    game9State.tiles[path[i]].number = currentNum;
+                    game9State.tiles[path[i]].isValid = true;
+                }
+
+                for (let i = 0; i < size * size; i++) {
+                    if (!game9State.tiles[i].isStart && !game9State.tiles[i].isEnd && game9State.tiles[i].number === 0) {
+                        game9State.tiles[i].number = Math.floor(Math.random() * 20) + 1;
+                    }
+                }
+            }
+        }
+
+        function findPath9(start, end, size) {
+            // Simple BFS to find a path
+            const queue = [[start]];
+            const visited = new Set([start]);
+
+            while (queue.length > 0) {
+                const path = queue.shift();
+                const current = path[path.length - 1];
+
+                if (current === end) {
+                    return path;
+                }
+
+                const neighbors = getNeighbors9(current, size);
+                for (const neighbor of neighbors) {
+                    if (!visited.has(neighbor)) {
+                        visited.add(neighbor);
+                        queue.push([...path, neighbor]);
+                    }
+                }
+            }
+
+            return [start, end]; // Fallback
+        }
+
+        function getNeighbors9(pos, size) {
+            const row = Math.floor(pos / size);
+            const col = pos % size;
+            const neighbors = [];
+
+            if (row > 0) neighbors.push((row - 1) * size + col); // Up
+            if (row < size - 1) neighbors.push((row + 1) * size + col); // Down
+            if (col > 0) neighbors.push(row * size + col - 1); // Left
+            if (col < size - 1) neighbors.push(row * size + col + 1); // Right
+
+            return neighbors;
+        }
+
+        function renderGame9() {
+            const grid = document.getElementById('maze-grid');
+            const ruleDisplay = document.getElementById('rule-display');
+            const size = game9State.gridSize;
+
+            grid.className = `maze-grid size-${size}`;
+            grid.innerHTML = '';
+
+            ruleDisplay.innerHTML = `
+                <h4>🎯 Rule:</h4>
+                <p>${game9State.ruleDescription}</p>
+            `;
+
+            game9State.tiles.forEach((tile, index) => {
+                const tileDiv = document.createElement('div');
+                tileDiv.className = 'maze-tile';
+                tileDiv.dataset.index = index;
+
+                if (tile.isStart) {
+                    tileDiv.classList.add('start');
+                    tileDiv.innerHTML = '<div class="tile-symbol">START</div>';
+                    tileDiv.onclick = () => selectTile9(index);
+                } else if (tile.isEnd) {
+                    tileDiv.classList.add('end');
+                    tileDiv.innerHTML = '<div class="tile-symbol">END</div>';
+                    tileDiv.onclick = () => selectTile9(index);
+                } else {
+                    tileDiv.innerHTML = `<div class="tile-number">${tile.number}</div>`;
+                    tileDiv.onclick = () => selectTile9(index);
+                }
+
+                if (game9State.userPath.includes(index)) {
+                    tileDiv.classList.add('selected');
+                }
+
+                grid.appendChild(tileDiv);
+            });
+
+            document.getElementById('path-counter').textContent = `Path Length: ${game9State.userPath.length}`;
+        }
+
+        function selectTile9(index) {
+            const tile = game9State.tiles[index];
+
+            // First click must be START
+            if (game9State.userPath.length === 0) {
+                if (tile.isStart) {
+                    game9State.userPath.push(index);
+                    renderGame9();
+                } else {
+                    showMessage(9, '⚠️ You must start from the START tile!', 'lose');
+                    setTimeout(() => hideMessage(9), 2000);
+                }
+                return;
+            }
+
+            // Can't select same tile twice
+            if (game9State.userPath.includes(index)) {
+                return;
+            }
+
+            // Must be adjacent to last tile
+            const lastIndex = game9State.userPath[game9State.userPath.length - 1];
+            const neighbors = getNeighbors9(lastIndex, game9State.gridSize);
+
+            if (!neighbors.includes(index)) {
+                showMessage(9, '⚠️ You can only move to adjacent tiles!', 'lose');
+                setTimeout(() => hideMessage(9), 2000);
+                return;
+            }
+
+            game9State.userPath.push(index);
+            renderGame9();
+
+            // Auto-check if reached END
+            if (tile.isEnd) {
+                setTimeout(() => checkGame9(), 300);
+            }
+        }
+
+        function clearPath9() {
+            game9State.userPath = [];
+            renderGame9();
+            hideMessage(9);
+        }
+
+        function checkGame9() {
+            if (game9State.userPath.length === 0) {
+                showMessage(9, '⚠️ Please select a path first!', 'lose');
+                return;
+            }
+
+            const lastTile = game9State.tiles[game9State.userPath[game9State.userPath.length - 1]];
+            if (!lastTile.isEnd) {
+                showMessage(9, '⚠️ You must reach the END tile!', 'lose');
+                return;
+            }
+
+            // Validate path based on rule
+            let valid = true;
+            let errorMsg = '';
+
+            if (game9State.ruleType === 'numbers') {
+                for (let i = 1; i < game9State.userPath.length - 1; i++) {
+                    const tileNum = game9State.tiles[game9State.userPath[i]].number;
+                    if (tileNum !== i) {
+                        valid = false;
+                        errorMsg = `Tile ${i} should be numbered ${i}, but you stepped on ${tileNum}`;
+                        break;
+                    }
+                }
+            } else if (game9State.ruleType === 'evens') {
+                for (let i = 1; i < game9State.userPath.length - 1; i++) {
+                    const tileNum = game9State.tiles[game9State.userPath[i]].number;
+                    if (tileNum % 2 !== 0) {
+                        valid = false;
+                        errorMsg = `You stepped on ${tileNum}, which is not even!`;
+                        break;
+                    }
+                }
+            } else if (game9State.ruleType === 'multiples') {
+                for (let i = 1; i < game9State.userPath.length - 1; i++) {
+                    const tileNum = game9State.tiles[game9State.userPath[i]].number;
+                    if (tileNum % 3 !== 0) {
+                        valid = false;
+                        errorMsg = `You stepped on ${tileNum}, which is not divisible by 3!`;
+                        break;
+                    }
+                }
+            } else if (game9State.ruleType === 'increasing') {
+                for (let i = 1; i < game9State.userPath.length - 2; i++) {
+                    const currentNum = game9State.tiles[game9State.userPath[i]].number;
+                    const nextNum = game9State.tiles[game9State.userPath[i + 1]].number;
+                    if (nextNum <= currentNum) {
+                        valid = false;
+                        errorMsg = `Numbers must increase: ${currentNum} → ${nextNum} is invalid!`;
+                        break;
+                    }
+                }
+            }
+
+            // Visual feedback
+            const tiles = document.querySelectorAll('.maze-tile');
+            game9State.userPath.forEach(index => {
+                const tile = tiles[index];
+                if (valid) {
+                    tile.classList.remove('selected', 'wrong-path');
+                    tile.classList.add('correct-path');
+                } else {
+                    tile.classList.remove('selected', 'correct-path');
+                    tile.classList.add('wrong-path');
+                }
+            });
+
+            if (valid) {
+                showMessage(9, `🎉 Perfect! You found a valid path in ${game9State.userPath.length} steps!`, 'win');
+            } else {
+                showMessage(9, `❌ Invalid path! ${errorMsg}`, 'lose');
             }
         }
 
