@@ -1202,6 +1202,43 @@
             line-height: 1.6;
         }
 
+        /* More Games Button */
+        .more-games-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            text-decoration: none;
+            margin: 30px auto;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            animation: glow 2s infinite;
+        }
+
+        .more-games-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+            background: linear-gradient(135deg, #ee5a6f, #ff6b6b);
+        }
+
+        .more-games-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(255, 107, 107, 0.7);
+            }
+        }
+
         /* ==================== RESPONSIVE DESIGN ==================== */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.8em; }
@@ -1226,6 +1263,7 @@
             .maze-tile { font-size: 1.6em; }
             .tile-number { font-size: 1.2em; }
             .tile-symbol { font-size: 1em; }
+            .more-games-btn { padding: 15px 30px; font-size: 1.1em; }
         }
     </style>
 </head>
@@ -1320,6 +1358,17 @@
                 <h3>About Logic Puzzle Arena</h3>
                 <p>A curated collection of classic and modern logic puzzles crafted to enhance cognitive skills. Each game features intelligent random generation algorithms ensuring every playthrough is unique and challenging.</p>
                 <p style="margin-top: 20px;">Built entirely with HTML, CSS, and JavaScript. No external dependencies, no tracking, just pure puzzle-solving entertainment.</p>
+
+                <div style="margin-top: 40px;">
+                    <a href="puzzle-master.html" class="more-games-btn">
+                        🎮 Play More Games →
+                    </a>
+                </div>
+                <p style="margin-top: 15px; font-size: 1em; opacity: 0.9;">
+                    <strong>5 Additional Puzzle Games Available!</strong><br>
+                    Number Patterns • Symbol Decoder • Odd One Out • Equation Solver • Pattern Grid
+                </p>
+
                 <p style="margin-top: 30px; opacity: 0.7; font-size: 0.95em;">© 2024 Logic Puzzle Arena • Made for puzzle enthusiasts worldwide</p>
             </footer>
         </div>
