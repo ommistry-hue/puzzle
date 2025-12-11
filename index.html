@@ -218,6 +218,7 @@
         .game-card:nth-child(3) { animation: fadeInCard 0.6s ease 0.3s both; }
         .game-card:nth-child(4) { animation: fadeInCard 0.6s ease 0.4s both; }
         .game-card:nth-child(5) { animation: fadeInCard 0.6s ease 0.5s both; }
+        .game-card:nth-child(6) { animation: fadeInCard 0.6s ease 0.6s both; }
 
         @keyframes fadeInCard {
             from { opacity: 0; transform: translateY(60px) scale(0.9); }
@@ -697,6 +698,131 @@
             75% { transform: translateX(10px); }
         }
 
+        /* Symbol Decoder */
+        .symbol-equation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .symbol-box {
+            background: white;
+            border: 4px solid #667eea;
+            border-radius: 18px;
+            padding: 25px;
+            min-width: 90px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .symbol-box:hover {
+            transform: translateY(-8px);
+        }
+
+        .symbol-box.missing {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 4px dashed #ffc107;
+            animation: pulse 2s infinite;
+            font-size: 4em;
+            color: #856404;
+        }
+
+        .operator-box {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .symbol-choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 18px;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .symbol-choice {
+            background: white;
+            border: 4px solid #ddd;
+            border-radius: 18px;
+            padding: 25px;
+            font-size: 3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .symbol-choice:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        .symbol-choice.selected {
+            border-color: #667eea;
+            background: #e3f2fd;
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+            transform: scale(1.05);
+        }
+
+        .symbol-choice.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .symbol-choice.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            animation: shake 0.5s ease;
+        }
+
+        .clue-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 6px solid #2196f3;
+        }
+
+        .clue-title {
+            color: #1976d2;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .clue-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 12px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            font-size: 1.1em;
+        }
+
+        .clue-symbol {
+            font-size: 2em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .clue-text {
+            color: #0d47a1;
+            font-weight: 500;
+        }
+
         /* ==================== RESPONSIVE DESIGN ==================== */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.8em; }
@@ -708,6 +834,10 @@
             .buttons { flex-direction: column; }
             .sequence-number { font-size: 1.8em; padding: 20px; min-width: 70px; }
             .stats { flex-direction: column; }
+            .symbol-box { font-size: 2em; padding: 18px; min-width: 70px; min-height: 70px; }
+            .operator-box { font-size: 2em; }
+            .symbol-choice { font-size: 2.2em; padding: 18px; min-height: 80px; }
+            .clue-symbol { font-size: 1.6em; }
         }
     </style>
 </head>
@@ -769,6 +899,12 @@
                         <div class="game-icon">🃏</div>
                         <div class="game-title">Memory Match</div>
                         <div class="game-desc">Find all matching pairs by remembering card positions. Challenge your memory and concentration!</div>
+                    </div>
+
+                    <div class="game-card" onclick="showScreen('game6')">
+                        <div class="game-icon">🔣</div>
+                        <div class="game-title">Symbol Decoder</div>
+                        <div class="game-desc">Decode the hidden logic! Each symbol represents a number. Find the missing symbol using deduction!</div>
                     </div>
                 </div>
             </section>
@@ -935,6 +1071,47 @@
         </div>
     </div>
 
+    <!-- ==================== GAME 6: SYMBOL DECODER ==================== -->
+    <div id="game6" class="screen">
+        <div class="game-page">
+            <div class="game-container">
+                <button class="back-button" onclick="showScreen('home')">← Back to Home</button>
+                <div class="game-header">
+                    <h1>🔣 Symbol Decoder</h1>
+                    <p class="game-subtitle">Crack the code with logic!</p>
+                </div>
+                <div class="instructions">
+                    <h3>📋 How to Play</h3>
+                    <p>Each symbol represents a number (0-9). Use the clue equations below to deduce the value of each symbol, then find the missing symbol that completes the final equation!</p>
+                </div>
+
+                <div class="clue-section" id="clue-section">
+                    <div class="clue-title">🔍 Clue Equations</div>
+                    <div id="clue-equations"></div>
+                </div>
+
+                <div class="game-board">
+                    <div style="text-align: center; margin-bottom: 20px; color: #667eea; font-size: 1.3em; font-weight: bold;">
+                        Find the missing symbol:
+                    </div>
+                    <div class="symbol-equation" id="puzzle-equation"></div>
+                </div>
+
+                <div style="text-align: center; margin: 25px 0; color: #666; font-size: 1.1em; font-weight: bold;">
+                    Select the correct symbol:
+                </div>
+                <div class="symbol-choices" id="symbol-choices"></div>
+
+                <div class="buttons">
+                    <button class="btn-secondary" onclick="resetGame6()">🔄 New Puzzle</button>
+                    <button class="btn-primary" onclick="checkGame6()">✓ Check Answer</button>
+                </div>
+
+                <div class="message" id="message6"></div>
+            </div>
+        </div>
+    </div>
+
     <script>
         'use strict';
 
@@ -950,6 +1127,7 @@
             if (screenId === 'game3' && !game3State.initialized) resetGame3();
             if (screenId === 'game4' && !game4State.initialized) resetGame4();
             if (screenId === 'game5' && !game5State.initialized) resetGame5();
+            if (screenId === 'game6' && !game6State.initialized) resetGame6();
         }
 
         function scrollToGames() {
@@ -1220,6 +1398,248 @@
                 } else {
                     setTimeout(() => { game5State.flipped = []; game5State.canFlip = true; renderGame5(); }, 1000);
                 }
+            }
+        }
+
+        // ==================== GAME 6: SYMBOL DECODER ====================
+        const game6State = {
+            initialized: false,
+            symbols: ['★', '◆', '●', '■', '▲'],
+            symbolValues: {},
+            clues: [],
+            puzzle: null,
+            selectedSymbol: null,
+            correctAnswer: null
+        };
+
+        function resetGame6() {
+            game6State.initialized = true;
+            game6State.selectedSymbol = null;
+
+            // Select 4-5 symbols randomly
+            const allSymbols = ['★', '◆', '●', '■', '▲', '♠', '♣', '♥', '◇', '△'];
+            const numSymbols = 4 + Math.floor(Math.random() * 2); // 4 or 5 symbols
+            game6State.symbols = allSymbols.sort(() => Math.random() - 0.5).slice(0, numSymbols);
+
+            // Assign random values (0-9) to each symbol
+            game6State.symbolValues = {};
+            const usedValues = new Set();
+            game6State.symbols.forEach(symbol => {
+                let value;
+                do {
+                    value = Math.floor(Math.random() * 10);
+                } while (usedValues.has(value));
+                usedValues.add(value);
+                game6State.symbolValues[symbol] = value;
+            });
+
+            // Generate clue equations
+            game6State.clues = generateClues();
+
+            // Generate the main puzzle equation
+            game6State.puzzle = generatePuzzle();
+
+            renderGame6();
+            hideMessage(6);
+        }
+
+        function generateClues() {
+            const clues = [];
+            const symbols = game6State.symbols;
+            const operations = [
+                { op: '+', fn: (a, b) => a + b, symbol: '+' },
+                { op: '-', fn: (a, b) => Math.abs(a - b), symbol: '−' },
+                { op: '*', fn: (a, b) => a * b, symbol: '×' }
+            ];
+
+            // Generate 3-4 clue equations
+            const numClues = 3 + Math.floor(Math.random() * 2);
+
+            for (let i = 0; i < numClues && i < symbols.length - 1; i++) {
+                const sym1 = symbols[i];
+                const sym2 = symbols[i + 1];
+                const operation = operations[Math.floor(Math.random() * operations.length)];
+
+                const val1 = game6State.symbolValues[sym1];
+                const val2 = game6State.symbolValues[sym2];
+                const result = operation.fn(val1, val2);
+
+                clues.push({
+                    symbol1: sym1,
+                    symbol2: sym2,
+                    operator: operation.symbol,
+                    result: result
+                });
+            }
+
+            return clues;
+        }
+
+        function generatePuzzle() {
+            const symbols = game6State.symbols;
+            const operations = [
+                { op: '+', fn: (a, b) => a + b, symbol: '+' },
+                { op: '-', fn: (a, b) => a - b, symbol: '−' },
+                { op: '*', fn: (a, b) => a * b, symbol: '×' }
+            ];
+
+            // Pick 2 known symbols and 1 missing
+            const knownIndices = [0, 1].sort(() => Math.random() - 0.5);
+            const missingIndex = Math.floor(Math.random() * 3);
+
+            const sym1 = symbols[knownIndices[0]];
+            const sym2 = symbols[knownIndices[1]];
+            const operation = operations[Math.floor(Math.random() * operations.length)];
+
+            const val1 = game6State.symbolValues[sym1];
+            const val2 = game6State.symbolValues[sym2];
+
+            let puzzle;
+            if (missingIndex === 0) {
+                // ? + sym2 = result
+                const result = operation.fn(val1, val2);
+                game6State.correctAnswer = sym1;
+                puzzle = {
+                    parts: ['?', operation.symbol, sym2, '=', result],
+                    missingPosition: 0
+                };
+            } else if (missingIndex === 1) {
+                // sym1 + ? = result
+                const result = operation.fn(val1, val2);
+                game6State.correctAnswer = sym2;
+                puzzle = {
+                    parts: [sym1, operation.symbol, '?', '=', result],
+                    missingPosition: 2
+                };
+            } else {
+                // sym1 + sym2 = ?
+                game6State.correctAnswer = symbols[Math.floor(Math.random() * symbols.length)];
+                const correctValue = game6State.symbolValues[game6State.correctAnswer];
+
+                // Calculate what the result should be based on correct answer
+                let result;
+                if (operation.op === '+') {
+                    result = correctValue; // sym1 + sym2 should equal correctValue
+                    // Adjust sym1 or sym2 values temporarily for this equation
+                    const adjustedSym1Value = Math.max(0, Math.min(9, correctValue - val2));
+                    result = adjustedSym1Value + val2;
+                } else if (operation.op === '-') {
+                    result = correctValue;
+                } else {
+                    result = correctValue;
+                }
+
+                // Actually, let's make it simpler - just use the operation result
+                result = operation.fn(val1, val2);
+
+                // Find which symbol has a value closest to result
+                let closestSymbol = symbols[0];
+                let minDiff = Math.abs(game6State.symbolValues[symbols[0]] - result);
+
+                symbols.forEach(sym => {
+                    const diff = Math.abs(game6State.symbolValues[sym] - result);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestSymbol = sym;
+                    }
+                });
+
+                game6State.correctAnswer = closestSymbol;
+
+                puzzle = {
+                    parts: [sym1, operation.symbol, sym2, '=', '?'],
+                    missingPosition: 4
+                };
+            }
+
+            return puzzle;
+        }
+
+        function renderGame6() {
+            // Render clue equations
+            const cluesDiv = document.getElementById('clue-equations');
+            cluesDiv.innerHTML = '';
+
+            game6State.clues.forEach(clue => {
+                const clueDiv = document.createElement('div');
+                clueDiv.className = 'clue-item';
+                clueDiv.innerHTML = `
+                    <span class="clue-symbol">${clue.symbol1}</span>
+                    <span class="clue-text">${clue.operator}</span>
+                    <span class="clue-symbol">${clue.symbol2}</span>
+                    <span class="clue-text">= ${clue.result}</span>
+                `;
+                cluesDiv.appendChild(clueDiv);
+            });
+
+            // Render puzzle equation
+            const puzzleDiv = document.getElementById('puzzle-equation');
+            puzzleDiv.innerHTML = '';
+
+            game6State.puzzle.parts.forEach((part, idx) => {
+                if (part === '?' || part === game6State.selectedSymbol) {
+                    const box = document.createElement('div');
+                    box.className = 'symbol-box missing';
+                    box.textContent = game6State.selectedSymbol || '?';
+                    puzzleDiv.appendChild(box);
+                } else if (part === '=' || part === '+' || part === '−' || part === '×') {
+                    const op = document.createElement('div');
+                    op.className = 'operator-box';
+                    op.textContent = part;
+                    puzzleDiv.appendChild(op);
+                } else {
+                    const box = document.createElement('div');
+                    box.className = 'symbol-box';
+                    box.textContent = part;
+                    puzzleDiv.appendChild(box);
+                }
+            });
+
+            // Render symbol choices
+            const choicesDiv = document.getElementById('symbol-choices');
+            choicesDiv.innerHTML = '';
+
+            game6State.symbols.forEach(symbol => {
+                const choice = document.createElement('div');
+                choice.className = 'symbol-choice';
+                if (symbol === game6State.selectedSymbol) {
+                    choice.classList.add('selected');
+                }
+                choice.textContent = symbol;
+                choice.onclick = () => selectSymbol(symbol);
+                choicesDiv.appendChild(choice);
+            });
+        }
+
+        function selectSymbol(symbol) {
+            game6State.selectedSymbol = symbol;
+            renderGame6();
+        }
+
+        function checkGame6() {
+            if (!game6State.selectedSymbol) {
+                showMessage(6, '⚠️ Please select a symbol first!', 'lose');
+                return;
+            }
+
+            const choices = document.querySelectorAll('.symbol-choice');
+
+            if (game6State.selectedSymbol === game6State.correctAnswer) {
+                choices.forEach(choice => {
+                    if (choice.textContent === game6State.correctAnswer) {
+                        choice.classList.add('correct');
+                    }
+                });
+                showMessage(6, `🎉 Correct! ${game6State.correctAnswer} = ${game6State.symbolValues[game6State.correctAnswer]}`, 'win');
+            } else {
+                choices.forEach(choice => {
+                    if (choice.textContent === game6State.selectedSymbol) {
+                        choice.classList.add('incorrect');
+                    } else if (choice.textContent === game6State.correctAnswer) {
+                        choice.classList.add('correct');
+                    }
+                });
+                showMessage(6, `❌ Wrong! The correct answer is ${game6State.correctAnswer} = ${game6State.symbolValues[game6State.correctAnswer]}`, 'lose');
             }
         }
 
