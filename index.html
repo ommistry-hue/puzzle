@@ -215,6 +215,523 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
+        /* ========================================================
+           DONATION BUTTON STYLES
+           ======================================================== */
+        .donate-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .donate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.5);
+        }
+        .donate-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+        .donate-btn-footer {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            border: none;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+        .donate-btn-footer:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* ========================================================
+           DONATION MODAL STYLES
+           ======================================================== */
+        .donate-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .donate-modal-overlay.show {
+            display: flex;
+        }
+        .donate-modal {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 25px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.4s ease;
+        }
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .donate-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .donate-modal-close:hover {
+            background: rgba(255, 107, 107, 0.3);
+            transform: rotate(90deg);
+        }
+        .donate-modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .donate-modal-header .donate-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            animation: pulse 2s infinite;
+        }
+        .donate-modal-header h2 {
+            color: #ffd700;
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .donate-modal-header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .donate-benefits {
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #ffd700;
+        }
+        .donate-benefits h4 {
+            color: #ffd700;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .donate-benefits ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .donate-benefits li {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .donate-benefits li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+        }
+        .donate-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .donate-amount-btn {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .donate-amount-btn:hover,
+        .donate-amount-btn.selected {
+            border-color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .donate-amount-btn.selected {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .donate-amount-btn span {
+            display: block;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 0.2rem;
+            font-weight: 400;
+        }
+        .donate-custom {
+            margin-bottom: 1.5rem;
+        }
+        .donate-custom label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+        .donate-custom-input {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .donate-custom-input:focus-within {
+            border-color: #ffd700;
+        }
+        .donate-custom-input span {
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffd700;
+            font-weight: 600;
+        }
+        .donate-custom-input input {
+            flex: 1;
+            padding: 0.8rem;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            outline: none;
+        }
+        .donate-custom-input input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .donate-qr-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+        }
+        .donate-qr-section h4 {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        .donate-qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-placeholder {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 2px;
+        }
+        .qr-placeholder div {
+            background: #1a1a2e;
+            border-radius: 2px;
+        }
+        .qr-placeholder div:nth-child(odd) {
+            background: #302b63;
+        }
+        .qr-placeholder div:nth-child(1),
+        .qr-placeholder div:nth-child(2),
+        .qr-placeholder div:nth-child(3),
+        .qr-placeholder div:nth-child(7),
+        .qr-placeholder div:nth-child(8),
+        .qr-placeholder div:nth-child(14),
+        .qr-placeholder div:nth-child(15),
+        .qr-placeholder div:nth-child(21),
+        .qr-placeholder div:nth-child(22),
+        .qr-placeholder div:nth-child(43),
+        .qr-placeholder div:nth-child(44),
+        .qr-placeholder div:nth-child(45),
+        .qr-placeholder div:nth-child(49) {
+            background: #1a1a2e;
+        }
+        .donate-wallet-section {
+            margin-bottom: 1.5rem;
+        }
+        .donate-wallet-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .donate-wallet-option .wallet-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .donate-wallet-option .wallet-icon {
+            font-size: 1.5rem;
+        }
+        .donate-wallet-option .wallet-details h5 {
+            color: #fff;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+        .donate-wallet-option .wallet-details p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+            margin: 0;
+            font-family: monospace;
+        }
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            color: #667eea;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: scale(1.05);
+        }
+        .copy-btn.copied {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: rgba(40, 167, 69, 0.3);
+            color: #28a745;
+        }
+        .donate-proceed-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .donate-proceed-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.4);
+        }
+        .donate-proceed-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Payment Processing Animation */
+        .payment-processing {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .payment-processing.show {
+            display: block;
+        }
+        .payment-spinner {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .payment-spinner::before,
+        .payment-spinner::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+        }
+        .payment-spinner::before {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, transparent, #ffd700, transparent 60%);
+            animation: spinnerRotate 1s linear infinite;
+        }
+        .payment-spinner::after {
+            width: 60px;
+            height: 60px;
+            background: #1a1a2e;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spinnerRotate {
+            to { transform: rotate(360deg); }
+        }
+        .payment-spinner-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.8rem;
+            z-index: 1;
+            animation: pulse 1s infinite;
+        }
+        .payment-status {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .payment-substatus {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+        .payment-steps {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        .payment-step {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        .payment-step.active {
+            color: #ffd700;
+        }
+        .payment-step.complete {
+            color: #28a745;
+        }
+        .payment-step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        .payment-step.active .payment-step-icon {
+            background: rgba(255, 215, 0, 0.2);
+            animation: pulse 1s infinite;
+        }
+        .payment-step.complete .payment-step-icon {
+            background: rgba(40, 167, 69, 0.2);
+        }
+
+        /* Payment Success */
+        .payment-success {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .payment-success.show {
+            display: block;
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounceIn 0.5s ease;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .payment-success h3 {
+            color: #28a745;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .payment-success p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+        .payment-success-btn {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-success-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Responsive adjustments for donation modal */
+        @media (max-width: 480px) {
+            .donate-modal {
+                padding: 1.5rem;
+                border-radius: 20px;
+            }
+            .donate-amounts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .donate-amount-btn {
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+            .donate-wallet-option {
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+            }
+            .donate-wallet-option .wallet-info {
+                flex-direction: column;
+            }
+        }
+
         /* Offline indicator */
         .offline-indicator {
             display: none;
@@ -1433,10 +1950,16 @@
                 <li><a href="#benefits">Benefits</a></li>
             </ul>
         </nav>
-        <button class="pwa-install-btn" id="pwaInstallBtn" onclick="installPWA()">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-            Install App
-        </button>
+        <div style="display: flex; gap: 0.8rem; align-items: center;">
+            <button class="donate-btn" onclick="openDonateModal()">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                Buy Me a Coffee
+            </button>
+            <button class="pwa-install-btn" id="pwaInstallBtn" onclick="installPWA()">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Install App
+            </button>
+        </div>
     </header>
 
     <!-- ============================================================
@@ -1600,6 +2123,10 @@
                 <a href="#">Terms of Use</a>
                 <a href="#">Contact</a>
             </div>
+            <button class="donate-btn-footer" onclick="openDonateModal()">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                Buy Me a Coffee
+            </button>
         </footer>
     </div>
 
@@ -1614,6 +2141,136 @@
         <p>A new version is available!</p>
         <button class="update-btn" onclick="updateApp()">Update Now</button>
         <button class="update-dismiss" onclick="dismissUpdate()">Later</button>
+    </div>
+
+    <!-- ============================================================
+         DONATION MODAL
+         ============================================================ -->
+    <div class="donate-modal-overlay" id="donateModalOverlay" onclick="closeDonateModalOnOverlay(event)">
+        <div class="donate-modal">
+            <button class="donate-modal-close" onclick="closeDonateModal()">&times;</button>
+
+            <!-- Main Content (shown initially) -->
+            <div class="donate-main-content" id="donateMainContent">
+                <div class="donate-modal-header">
+                    <span class="donate-icon">☕</span>
+                    <h2>Buy Me a Coffee</h2>
+                    <p>Love Logic Puzzle Master? Your support helps keep the puzzles coming and the servers running!</p>
+                </div>
+
+                <div class="donate-benefits">
+                    <h4>Your Donation Helps:</h4>
+                    <ul>
+                        <li>Add new puzzle games regularly</li>
+                        <li>Keep the app ad-free forever</li>
+                        <li>Improve game performance</li>
+                        <li>Support independent development</li>
+                    </ul>
+                </div>
+
+                <div class="donate-amounts">
+                    <button class="donate-amount-btn" onclick="selectAmount(3)">$3<span>A coffee</span></button>
+                    <button class="donate-amount-btn selected" onclick="selectAmount(5)">$5<span>A latte</span></button>
+                    <button class="donate-amount-btn" onclick="selectAmount(10)">$10<span>A meal</span></button>
+                </div>
+
+                <div class="donate-custom">
+                    <label>Or enter a custom amount:</label>
+                    <div class="donate-custom-input">
+                        <span>$</span>
+                        <input type="number" id="customAmount" placeholder="Enter amount" min="1" oninput="handleCustomAmount(this.value)">
+                    </div>
+                </div>
+
+                <div class="donate-qr-section">
+                    <h4>Scan to Donate</h4>
+                    <div class="donate-qr-code">
+                        <div class="qr-placeholder">
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                            <div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="donate-wallet-section">
+                    <div class="donate-wallet-option">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">💳</span>
+                            <div class="wallet-details">
+                                <h5>PayPal</h5>
+                                <p>donate@logicpuzzle.app</p>
+                            </div>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('donate@logicpuzzle.app', this)">Copy</button>
+                    </div>
+                    <div class="donate-wallet-option">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">📱</span>
+                            <div class="wallet-details">
+                                <h5>UPI</h5>
+                                <p>logicpuzzle@upi</p>
+                            </div>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('logicpuzzle@upi', this)">Copy</button>
+                    </div>
+                    <div class="donate-wallet-option">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">🔗</span>
+                            <div class="wallet-details">
+                                <h5>Crypto (ETH)</h5>
+                                <p>0x1a2b...9z0x</p>
+                            </div>
+                        </div>
+                        <button class="copy-btn" onclick="copyToClipboard('0x1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t', this)">Copy</button>
+                    </div>
+                </div>
+
+                <button class="donate-proceed-btn" onclick="processDonation()">
+                    <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    Donate <span id="donateAmountDisplay">$5</span>
+                </button>
+            </div>
+
+            <!-- Payment Processing (shown during fake processing) -->
+            <div class="payment-processing" id="paymentProcessing">
+                <div class="payment-spinner">
+                    <span class="payment-spinner-icon">💳</span>
+                </div>
+                <p class="payment-status" id="paymentStatus">Processing Payment...</p>
+                <p class="payment-substatus" id="paymentSubstatus">Please wait while we process your donation</p>
+                <div class="payment-steps">
+                    <div class="payment-step" id="step1">
+                        <span class="payment-step-icon">1</span>
+                        <span>Connecting to payment gateway...</span>
+                    </div>
+                    <div class="payment-step" id="step2">
+                        <span class="payment-step-icon">2</span>
+                        <span>Verifying payment details...</span>
+                    </div>
+                    <div class="payment-step" id="step3">
+                        <span class="payment-step-icon">3</span>
+                        <span>Processing transaction...</span>
+                    </div>
+                    <div class="payment-step" id="step4">
+                        <span class="payment-step-icon">4</span>
+                        <span>Confirming donation...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Success (shown after fake processing) -->
+            <div class="payment-success" id="paymentSuccess">
+                <div class="success-icon">🎉</div>
+                <h3>Thank You!</h3>
+                <p>Your generous donation of <span id="successAmount">$5</span> has been received. You're helping make Logic Puzzle Master even better!</p>
+                <button class="payment-success-btn" onclick="closeDonateModal()">Continue Playing</button>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================================
@@ -4361,6 +5018,163 @@
                    window.navigator.standalone === true ||
                    document.referrer.includes('android-app://');
         }
+
+        /* ===========================================================
+           DONATION SYSTEM
+           =========================================================== */
+        let selectedDonationAmount = 5;
+
+        function openDonateModal() {
+            const overlay = document.getElementById('donateModalOverlay');
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            // Reset to main content view
+            resetDonateModal();
+        }
+
+        function closeDonateModal() {
+            const overlay = document.getElementById('donateModalOverlay');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+            // Reset modal after close animation
+            setTimeout(resetDonateModal, 300);
+        }
+
+        function closeDonateModalOnOverlay(event) {
+            if (event.target.id === 'donateModalOverlay') {
+                closeDonateModal();
+            }
+        }
+
+        function resetDonateModal() {
+            document.getElementById('donateMainContent').style.display = 'block';
+            document.getElementById('paymentProcessing').classList.remove('show');
+            document.getElementById('paymentSuccess').classList.remove('show');
+            // Reset steps
+            ['step1', 'step2', 'step3', 'step4'].forEach((id, index) => {
+                const step = document.getElementById(id);
+                step.classList.remove('active', 'complete');
+                step.querySelector('.payment-step-icon').textContent = (index + 1).toString();
+            });
+            // Reset amount
+            selectedDonationAmount = 5;
+            document.getElementById('customAmount').value = '';
+            updateDonateDisplay();
+            // Reset amount buttons
+            document.querySelectorAll('.donate-amount-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelectorAll('.donate-amount-btn')[1].classList.add('selected');
+        }
+
+        function selectAmount(amount) {
+            selectedDonationAmount = amount;
+            // Update button styles
+            document.querySelectorAll('.donate-amount-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.closest('.donate-amount-btn').classList.add('selected');
+            // Clear custom input
+            document.getElementById('customAmount').value = '';
+            updateDonateDisplay();
+        }
+
+        function handleCustomAmount(value) {
+            if (value && parseFloat(value) > 0) {
+                selectedDonationAmount = parseFloat(value);
+                // Remove selection from preset buttons
+                document.querySelectorAll('.donate-amount-btn').forEach(btn => {
+                    btn.classList.remove('selected');
+                });
+                updateDonateDisplay();
+            }
+        }
+
+        function updateDonateDisplay() {
+            document.getElementById('donateAmountDisplay').textContent = '$' + selectedDonationAmount;
+        }
+
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function processDonation() {
+            // Hide main content, show processing
+            document.getElementById('donateMainContent').style.display = 'none';
+            document.getElementById('paymentProcessing').classList.add('show');
+
+            // Simulate payment processing with step-by-step animation
+            const steps = ['step1', 'step2', 'step3', 'step4'];
+            const statusMessages = [
+                { status: 'Connecting...', substatus: 'Establishing secure connection' },
+                { status: 'Verifying...', substatus: 'Checking payment details' },
+                { status: 'Processing...', substatus: 'Transaction in progress' },
+                { status: 'Confirming...', substatus: 'Almost done!' }
+            ];
+
+            let currentStep = 0;
+
+            function processStep() {
+                if (currentStep < steps.length) {
+                    // Mark current step as active
+                    document.getElementById(steps[currentStep]).classList.add('active');
+                    document.getElementById('paymentStatus').textContent = statusMessages[currentStep].status;
+                    document.getElementById('paymentSubstatus').textContent = statusMessages[currentStep].substatus;
+
+                    // After delay, mark as complete and move to next
+                    setTimeout(() => {
+                        document.getElementById(steps[currentStep]).classList.remove('active');
+                        document.getElementById(steps[currentStep]).classList.add('complete');
+                        document.getElementById(steps[currentStep]).querySelector('.payment-step-icon').textContent = '✓';
+                        currentStep++;
+                        processStep();
+                    }, 800 + Math.random() * 400);
+                } else {
+                    // All steps complete - show success
+                    setTimeout(showPaymentSuccess, 500);
+                }
+            }
+
+            processStep();
+        }
+
+        function showPaymentSuccess() {
+            document.getElementById('paymentProcessing').classList.remove('show');
+            document.getElementById('paymentSuccess').classList.add('show');
+            document.getElementById('successAmount').textContent = '$' + selectedDonationAmount;
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('donateModalOverlay');
+                if (overlay.classList.contains('show')) {
+                    closeDonateModal();
+                }
+            }
+        });
 
         /* ===========================================================
            INITIALIZATION
