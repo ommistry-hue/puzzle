@@ -12,7 +12,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="msapplication-TileColor" content="#0f0c29">
     <meta name="msapplication-tap-highlight" content="no">
-    <!-- Manifest will be dynamically generated -->
+    <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f0c29' width='100' height='100' rx='20'/><text y='.9em' x='10' font-size='80'>🧩</text></svg>">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
     <title>Logic Puzzle Master - Brain Training Games with Interactive Tutorials</title>
@@ -3986,24 +3986,18 @@
             prefer_related_applications: false
         };
 
-        // Create and inject manifest dynamically
+        // Manifest is now loaded from actual manifest.json file (linked in HTML head)
+        // Blob URLs don't work reliably in production deployments
         function injectManifest() {
-            const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
-            const manifestUrl = URL.createObjectURL(manifestBlob);
-
-            // Remove any existing manifest link
+            // Check if manifest link already exists
             const existingManifest = document.querySelector('link[rel="manifest"]');
-            if (existingManifest) {
-                existingManifest.remove();
+            if (!existingManifest) {
+                const manifestLink = document.createElement('link');
+                manifestLink.rel = 'manifest';
+                manifestLink.href = '/manifest.json';
+                document.head.appendChild(manifestLink);
             }
-
-            // Create and add new manifest link
-            const manifestLink = document.createElement('link');
-            manifestLink.rel = 'manifest';
-            manifestLink.href = manifestUrl;
-            document.head.appendChild(manifestLink);
-
-            console.log('PWA Manifest injected dynamically');
+            console.log('[PWA] Using manifest.json file');
         }
 
         /* ===========================================================
@@ -4133,11 +4127,8 @@
 
         function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
-                // Create Blob URL for service worker
-                const swBlob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(swBlob);
-
-                navigator.serviceWorker.register(swUrl, { scope: './' })
+                // Register actual sw.js file (Blob URLs don't work in production)
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
                     .then((registration) => {
                         swRegistration = registration;
                         console.log('[PWA] Service Worker registered successfully');
