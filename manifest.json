@@ -1,0 +1,45 @@
+{
+  "name": "Logic Puzzle Master - Brain Training Games",
+  "short_name": "Logic Puzzle",
+  "description": "Train your brain with 5+ unique logic puzzle games featuring interactive video tutorials.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0f0c29",
+  "theme_color": "#0f0c29",
+  "orientation": "portrait-primary",
+  "categories": ["games", "education", "entertainment"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f0c29' width='100' height='100' rx='20'/><text y='.9em' x='10' font-size='80'>🧩</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Number Pattern Puzzle",
+      "short_name": "Numbers",
+      "description": "Play the Number Pattern Logic Puzzle",
+      "url": "/index.html#game1",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Symbol Decoder",
+      "short_name": "Symbols",
+      "description": "Play the Symbol Decoder Puzzle",
+      "url": "/index.html#game2",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>", "sizes": "96x96" }]
+    },
+    {
+      "name": "Equation Solver",
+      "short_name": "Equations",
+      "description": "Play the Equation Logic Solver",
+      "url": "/index.html#game3",
+      "icons": [{ "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>➕</text></svg>", "sizes": "96x96" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

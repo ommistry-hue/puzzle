@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Logic Puzzle Master - Train your brain with 5+ unique logic puzzle games featuring interactive video tutorials. Number patterns, symbol decoder, equation puzzles, odd-one-out, and pattern grid deduction.">
     <meta name="keywords" content="logic puzzles, brain games, number patterns, symbol decoder, equation puzzles, odd one out, pattern recognition, brain training, puzzle games, free online games">
+    <meta name="theme-color" content="#0f0c29">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Logic Puzzle">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#0f0c29">
+    <meta name="msapplication-tap-highlight" content="no">
+    <!-- Manifest will be dynamically generated -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f0c29' width='100' height='100' rx='20'/><text y='.9em' x='10' font-size='80'>🧩</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
     <title>Logic Puzzle Master - Brain Training Games with Interactive Tutorials</title>
     <style>
         /* ========================================================
@@ -98,6 +108,194 @@
             font-size: clamp(0.8rem, 2vw, 0.95rem);
         }
         .nav-links a:hover { color: #ffd700; }
+
+        /* PWA Install Button - Header */
+        .pwa-install-btn {
+            display: none;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #ffd700, #ff6b6b);
+            border: none;
+            border-radius: 25px;
+            color: #1a1a2e;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .pwa-install-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        .pwa-install-btn.show {
+            display: flex;
+        }
+        .pwa-install-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* PWA Install Banner - Home Page */
+        .pwa-install-banner {
+            display: none;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            text-align: center;
+            animation: fadeIn 0.5s ease, glow 3s infinite;
+        }
+        .pwa-install-banner.show {
+            display: block;
+        }
+        .pwa-install-banner h3 {
+            color: #ffd700;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .pwa-install-banner p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        .pwa-install-banner .install-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .pwa-install-banner .feature-tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .pwa-hero-install-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+        .pwa-hero-install-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.5);
+        }
+        .pwa-hero-install-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        .pwa-dismiss-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 0.8rem;
+            transition: color 0.3s;
+        }
+        .pwa-dismiss-btn:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Offline indicator */
+        .offline-indicator {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 9999;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+        .offline-indicator.show {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .offline-indicator.online {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        @keyframes slideUp {
+            from { transform: translateX(-50%) translateY(100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        /* Update notification */
+        .update-notification {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            z-index: 9998;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 90%;
+            width: 350px;
+        }
+        .update-notification.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        .update-notification p {
+            margin-bottom: 0.8rem;
+        }
+        .update-btn {
+            background: #fff;
+            color: #667eea;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 0.5rem;
+            transition: transform 0.2s;
+        }
+        .update-btn:hover {
+            transform: scale(1.05);
+        }
+        .update-dismiss {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .update-dismiss:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
 
         /* ========================================================
            ANIMATED BACKGROUND - Floating particles effect
@@ -963,6 +1161,224 @@
         }
 
         /* ========================================================
+           GAME 6: PATH FINDER MAZE STYLES
+           ======================================================== */
+        .maze-grid {
+            display: grid;
+            gap: 4px;
+            justify-content: center;
+            margin: 1.5rem auto;
+        }
+        .maze-cell {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .maze-cell:hover { background: rgba(255, 255, 255, 0.2); }
+        .maze-cell.start { background: linear-gradient(135deg, #28a745, #20c997); }
+        .maze-cell.end { background: linear-gradient(135deg, #ffd700, #ff6b6b); }
+        .maze-cell.path { background: rgba(102, 126, 234, 0.5); border-color: #667eea; }
+        .maze-cell.wall { background: rgba(0, 0, 0, 0.5); cursor: not-allowed; }
+        .maze-cell.current { animation: pulse 0.5s infinite; box-shadow: 0 0 15px #ffd700; }
+
+        /* ========================================================
+           GAME 7: WORD DEDUCTION STYLES
+           ======================================================== */
+        .word-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+        .word-row {
+            display: flex;
+            gap: 8px;
+        }
+        .letter-cell {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+        .letter-cell.correct { background: #28a745; border-color: #28a745; }
+        .letter-cell.present { background: #ffc107; border-color: #ffc107; color: #1a1a2e; }
+        .letter-cell.absent { background: rgba(100, 100, 100, 0.5); border-color: #666; }
+        .letter-cell.active { border-color: #ffd700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+        .keyboard-row {
+            display: flex;
+            gap: 6px;
+        }
+        .key-btn {
+            min-width: 35px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0 12px;
+        }
+        .key-btn:hover { background: rgba(255, 255, 255, 0.25); }
+        .key-btn.correct { background: #28a745; }
+        .key-btn.present { background: #ffc107; color: #1a1a2e; }
+        .key-btn.absent { background: rgba(60, 60, 60, 0.8); }
+        .key-btn.wide { min-width: 60px; }
+
+        /* ========================================================
+           GAME 8: MEMORY SEQUENCE STYLES
+           ======================================================== */
+        .memory-board {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            max-width: 300px;
+            margin: 1.5rem auto;
+        }
+        .memory-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+        .memory-btn:hover { opacity: 0.8; transform: scale(1.02); }
+        .memory-btn.active { opacity: 1; transform: scale(1.05); box-shadow: 0 0 30px currentColor; }
+        .memory-btn.red { background: #e74c3c; }
+        .memory-btn.blue { background: #3498db; }
+        .memory-btn.green { background: #2ecc71; }
+        .memory-btn.yellow { background: #f1c40f; }
+        .memory-btn:disabled { cursor: not-allowed; }
+        .memory-status {
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            min-height: 30px;
+        }
+        .memory-level {
+            font-size: 1.5rem;
+            color: #ffd700;
+            font-weight: 700;
+        }
+
+        /* ========================================================
+           GAME 9: COLOR PATTERN ROTATION STYLES
+           ======================================================== */
+        .pattern-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+        .pattern-box {
+            text-align: center;
+        }
+        .pattern-box h4 {
+            margin-bottom: 0.8rem;
+            color: #ffd700;
+        }
+        .rotation-grid {
+            display: grid;
+            gap: 5px;
+        }
+        .color-tile {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .color-tile:hover { transform: scale(1.1); }
+        .color-tile.c1 { background: #e74c3c; }
+        .color-tile.c2 { background: #3498db; }
+        .color-tile.c3 { background: #2ecc71; }
+        .color-tile.c4 { background: #9b59b6; }
+        .target-grid .color-tile { cursor: default; }
+        .target-grid .color-tile:hover { transform: none; }
+        .rotation-hint {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        /* ========================================================
+           GAME 10: LOGIC GRID DETECTIVE STYLES
+           ======================================================== */
+        .detective-grid {
+            display: grid;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px;
+            border-radius: 10px;
+            margin: 1.5rem auto;
+            width: fit-content;
+        }
+        .detective-cell {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .detective-cell:hover { background: rgba(255, 255, 255, 0.2); }
+        .detective-cell.header {
+            background: rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: default;
+        }
+        .detective-cell.yes { background: #28a745; }
+        .detective-cell.no { background: rgba(220, 53, 69, 0.5); }
+        .clue-list {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: left;
+        }
+        .clue-list li {
+            padding: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .clue-list li:last-child { border-bottom: none; }
+
+        /* ========================================================
            RESPONSIVE DESIGN - Mobile & Tablet adjustments
            ======================================================== */
         @media (max-width: 768px) {
@@ -1017,6 +1433,10 @@
                 <li><a href="#benefits">Benefits</a></li>
             </ul>
         </nav>
+        <button class="pwa-install-btn" id="pwaInstallBtn" onclick="installPWA()">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Install App
+        </button>
     </header>
 
     <!-- ============================================================
@@ -1026,11 +1446,32 @@
         <!-- Hero Section -->
         <section class="hero">
             <h1>Train Your Brain with Logic Puzzles</h1>
-            <p>Challenge yourself with 5+ unique puzzle games designed to boost cognitive skills, pattern recognition, and logical reasoning. Interactive tutorials included!</p>
+            <p>Challenge yourself with 10+ unique puzzle games designed to boost cognitive skills, pattern recognition, and logical reasoning. Interactive tutorials included!</p>
             <button class="hero-btn" onclick="document.getElementById('games-section').scrollIntoView({behavior: 'smooth'})">
                 Start Playing Now
             </button>
         </section>
+
+        <!-- PWA Install Banner - Visible on Home Page -->
+        <div class="pwa-install-banner" id="pwaInstallBanner">
+            <h3>
+                <svg viewBox="0 0 24 24" fill="currentColor" width="24" height="24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Install Logic Puzzle Master
+            </h3>
+            <p>Add this app to your device for the best experience - play offline anytime!</p>
+            <div class="install-features">
+                <span class="feature-tag">Works Offline</span>
+                <span class="feature-tag">No Downloads</span>
+                <span class="feature-tag">Fast & Light</span>
+                <span class="feature-tag">Free Forever</span>
+            </div>
+            <button class="pwa-hero-install-btn" onclick="installPWA()">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Install App Now
+            </button>
+            <br>
+            <button class="pwa-dismiss-btn" onclick="dismissInstallBanner()">Maybe later</button>
+        </div>
 
         <!-- Main Games Section -->
         <section id="games-section" class="games-section">
@@ -1083,58 +1524,42 @@
             </button>
             <div class="expandable-content" id="moreGamesContent">
                 <div class="more-games-grid">
-                    <!-- Coming Soon Game 1 -->
-                    <div class="coming-soon-card" onclick="showModal('modal1')">
-                        <span class="coming-soon-badge">Coming Soon</span>
-                        <span class="game-icon">🎲</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Logic Matrix Puzzle</h3>
-                        <p>Advanced matrix-based deduction challenges</p>
-                    </div>
-
-                    <!-- Coming Soon Game 2 -->
-                    <div class="coming-soon-card" onclick="showModal('modal2')">
-                        <span class="coming-soon-badge">Coming Soon</span>
-                        <span class="game-icon">🧮</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Sudoku Variants</h3>
-                        <p>Classic and twist sudoku challenges</p>
-                    </div>
-
-                    <!-- Coming Soon Game 3 -->
-                    <div class="coming-soon-card" onclick="showModal('modal3')">
-                        <span class="coming-soon-badge">Coming Soon</span>
-                        <span class="game-icon">🔮</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Sequence Predictor</h3>
-                        <p>Predict complex visual & number sequences</p>
-                    </div>
-
-                    <!-- Coming Soon Game 4 -->
-                    <div class="coming-soon-card" onclick="showModal('modal4')">
-                        <span class="coming-soon-badge">Coming Soon</span>
-                        <span class="game-icon">⚖️</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Balance Scale Logic</h3>
-                        <p>Deduce weights using balance comparisons</p>
-                    </div>
-
-                    <!-- Coming Soon Game 5 -->
-                    <div class="coming-soon-card" onclick="showModal('modal5')">
-                        <span class="coming-soon-badge">Coming Q2</span>
+                    <!-- Game 6: Path Finder Logic Maze -->
+                    <div class="game-card" onclick="showScreen('game6')">
+                        <span class="game-badge badge-new">New</span>
                         <span class="game-icon">🗺️</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Path Finder Logic</h3>
-                        <p>Navigate mazes using logical constraints</p>
+                        <h3>Path Finder Logic Maze</h3>
+                        <p>Navigate mazes using arrow clues and logical constraints</p>
                     </div>
 
-                    <!-- Coming Soon Game 6 -->
-                    <div class="coming-soon-card" onclick="showModal('modal6')">
-                        <span class="coming-soon-badge">Coming Q2</span>
-                        <span class="game-icon">🎭</span>
-                        <span class="lock-overlay">🔒</span>
-                        <h3>Truth & Lies Puzzle</h3>
-                        <p>Determine who's telling the truth</p>
+                    <!-- Game 7: Word Deduction Mini-Game -->
+                    <div class="game-card" onclick="showScreen('game7')">
+                        <span class="game-badge badge-popular">Hot</span>
+                        <span class="game-icon">📝</span>
+                        <h3>Word Deduction</h3>
+                        <p>Guess the hidden word using letter feedback clues</p>
+                    </div>
+
+                    <!-- Game 8: Memory Sequence Challenge -->
+                    <div class="game-card" onclick="showScreen('game8')">
+                        <span class="game-icon">🧠</span>
+                        <h3>Memory Sequence</h3>
+                        <p>Remember and repeat growing sequences of colors</p>
+                    </div>
+
+                    <!-- Game 9: Color Pattern Rotation Puzzle -->
+                    <div class="game-card" onclick="showScreen('game9')">
+                        <span class="game-icon">🎨</span>
+                        <h3>Color Pattern Rotation</h3>
+                        <p>Rotate tiles to match the target color pattern</p>
+                    </div>
+
+                    <!-- Game 10: Logic Grid Detective Puzzle -->
+                    <div class="game-card" onclick="showScreen('game10')">
+                        <span class="game-badge badge-new">New</span>
+                        <span class="game-icon">🔍</span>
+                        <h3>Logic Grid Detective</h3>
+                        <p>Solve mysteries using clues and elimination logic</p>
                     </div>
                 </div>
             </div>
@@ -1178,121 +1603,17 @@
         </footer>
     </div>
 
-    <!-- ============================================================
-         COMING SOON MODALS
-         ============================================================ -->
-    <!-- Modal 1: Logic Matrix -->
-    <div class="modal-overlay" id="modal1">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal1')">×</button>
-            <div class="modal-icon">🎲</div>
-            <h2>Logic Matrix Puzzle</h2>
-            <p>An advanced puzzle game where you use elimination and deduction to solve complex matrix-based challenges. Perfect for those who love systematic thinking!</p>
-            <ul class="modal-features">
-                <li>Multiple difficulty levels</li>
-                <li>Clue-based deduction system</li>
-                <li>Progress tracking</li>
-                <li>Interactive hints</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal1')">
-                Notify Me When Available
-            </button>
-        </div>
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <span id="offlineIcon">📡</span>
+        <span id="offlineText">You're offline</span>
     </div>
 
-    <!-- Modal 2: Sudoku Variants -->
-    <div class="modal-overlay" id="modal2">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal2')">×</button>
-            <div class="modal-icon">🧮</div>
-            <h2>Sudoku Variants</h2>
-            <p>Experience classic Sudoku with exciting twists! Including Killer Sudoku, Diagonal Sudoku, and other creative variations.</p>
-            <ul class="modal-features">
-                <li>6 unique Sudoku variants</li>
-                <li>Auto-error detection</li>
-                <li>Pencil mark support</li>
-                <li>Daily challenges</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal2')">
-                Notify Me When Available
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal 3: Sequence Predictor -->
-    <div class="modal-overlay" id="modal3">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal3')">×</button>
-            <div class="modal-icon">🔮</div>
-            <h2>Sequence Predictor</h2>
-            <p>Test your pattern recognition with complex visual and numerical sequences. Predict what comes next based on multiple interacting rules!</p>
-            <ul class="modal-features">
-                <li>Visual pattern challenges</li>
-                <li>Multi-rule sequences</li>
-                <li>Timed challenges</li>
-                <li>Achievement system</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal3')">
-                Notify Me When Available
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal 4: Balance Scale Logic -->
-    <div class="modal-overlay" id="modal4">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal4')">×</button>
-            <div class="modal-icon">⚖️</div>
-            <h2>Balance Scale Logic</h2>
-            <p>Deduce the weight of unknown objects using balance scale comparisons. A classic logic puzzle brought to the digital age!</p>
-            <ul class="modal-features">
-                <li>Drag-and-drop interface</li>
-                <li>Visual weight comparisons</li>
-                <li>Limited weighing challenges</li>
-                <li>Solution optimizer</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal4')">
-                Notify Me When Available
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal 5: Path Finder Logic -->
-    <div class="modal-overlay" id="modal5">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal5')">×</button>
-            <div class="modal-icon">🗺️</div>
-            <h2>Path Finder Logic</h2>
-            <p>Navigate through mazes and grids using logical constraints. Each cell has rules about which directions you can travel!</p>
-            <ul class="modal-features">
-                <li>Procedurally generated mazes</li>
-                <li>Multiple constraint types</li>
-                <li>Shortest path bonuses</li>
-                <li>Map editor mode</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal5')">
-                Notify Me When Available
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal 6: Truth & Lies -->
-    <div class="modal-overlay" id="modal6">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('modal6')">×</button>
-            <div class="modal-icon">🎭</div>
-            <h2>Truth & Lies Puzzle</h2>
-            <p>Classic logic puzzle where characters make statements. Some always tell the truth, some always lie. Can you figure out who's who?</p>
-            <ul class="modal-features">
-                <li>Story-based scenarios</li>
-                <li>Increasing complexity</li>
-                <li>Detective narrative</li>
-                <li>Hint system</li>
-            </ul>
-            <button class="notify-btn" onclick="alert('Thanks! We\'ll notify you when this game launches!'); closeModal('modal6')">
-                Notify Me When Available
-            </button>
-        </div>
+    <!-- Update Notification -->
+    <div class="update-notification" id="updateNotification">
+        <p>A new version is available!</p>
+        <button class="update-btn" onclick="updateApp()">Update Now</button>
+        <button class="update-dismiss" onclick="dismissUpdate()">Later</button>
     </div>
 
     <!-- ============================================================
@@ -1702,6 +2023,402 @@
     </div>
 
     <!-- ============================================================
+         GAME 6: PATH FINDER LOGIC MAZE
+         ============================================================ -->
+    <div id="game6-screen" class="screen">
+        <div class="game-screen">
+            <button class="back-btn" onclick="showScreen('home')">← Back to Home</button>
+
+            <div class="game-header">
+                <h1 class="game-title">🗺️ Path Finder Logic Maze</h1>
+                <p class="game-subtitle">Navigate from Start to End following arrow directions</p>
+            </div>
+
+            <div class="info-panel">
+                <h3>📖 How to Play</h3>
+                <ol>
+                    <li>Start at the green cell (S) and reach the gold cell (E)</li>
+                    <li>Click on adjacent cells to move through the maze</li>
+                    <li>Follow the arrow hints - they show valid directions</li>
+                    <li>Avoid walls (dark cells) - you cannot pass through them</li>
+                </ol>
+            </div>
+
+            <div class="info-panel objectives-panel">
+                <h3>🎯 Objectives & Benefits</h3>
+                <p><strong>Goal:</strong> Find the correct path from start to end.</p>
+                <p><strong>Benefits:</strong> Develops spatial reasoning, path planning skills, and logical navigation abilities.</p>
+            </div>
+
+            <div class="info-panel hints-panel">
+                <h3>💡 Hints</h3>
+                <ul>
+                    <li>Plan your route before moving</li>
+                    <li>Arrows show which directions are possible from each cell</li>
+                    <li>If stuck, restart and try a different path</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <h3 style="margin-bottom: 1rem; color: #ffd700;">Find the Path:</h3>
+                <div class="maze-grid" id="game6-maze" style="grid-template-columns: repeat(5, 1fr);"></div>
+                <div class="btn-group">
+                    <button class="game-btn restart-btn" onclick="generateGame6()">New Maze</button>
+                </div>
+                <div class="feedback" id="game6-feedback"></div>
+            </div>
+
+            <div class="video-section">
+                <h3>🎬 Video Tutorial</h3>
+                <div class="video-player">
+                    <div class="video-header">
+                        <span class="video-dot red"></span>
+                        <span class="video-dot yellow"></span>
+                        <span class="video-dot green"></span>
+                        <span class="video-title">Path Finder Tutorial</span>
+                    </div>
+                    <div class="video-canvas" id="tutorial6-canvas">
+                        <div class="play-overlay" id="tutorial6-overlay" onclick="startTutorial(6)">
+                            <div class="play-circle">
+                                <div class="play-triangle"></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-content" id="tutorial6-content"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="tutorial6-playpause" onclick="toggleTutorial(6)">▶</button>
+                        <div class="progress-bar" onclick="seekTutorial(event, 6)">
+                            <div class="progress-fill" id="tutorial6-progress"></div>
+                        </div>
+                        <span class="time-display" id="tutorial6-time">0:00 / 0:15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         GAME 7: WORD DEDUCTION MINI-GAME
+         ============================================================ -->
+    <div id="game7-screen" class="screen">
+        <div class="game-screen">
+            <button class="back-btn" onclick="showScreen('home')">← Back to Home</button>
+
+            <div class="game-header">
+                <h1 class="game-title">📝 Word Deduction</h1>
+                <p class="game-subtitle">Guess the 5-letter word in 6 tries</p>
+            </div>
+
+            <div class="info-panel">
+                <h3>📖 How to Play</h3>
+                <ol>
+                    <li>Type a 5-letter word and press Enter</li>
+                    <li>Green = correct letter in correct position</li>
+                    <li>Yellow = correct letter in wrong position</li>
+                    <li>Gray = letter not in the word</li>
+                </ol>
+            </div>
+
+            <div class="info-panel objectives-panel">
+                <h3>🎯 Objectives & Benefits</h3>
+                <p><strong>Goal:</strong> Guess the hidden word using letter clues.</p>
+                <p><strong>Benefits:</strong> Improves vocabulary, deductive reasoning, and strategic thinking skills.</p>
+            </div>
+
+            <div class="info-panel hints-panel">
+                <h3>💡 Hints</h3>
+                <ul>
+                    <li>Start with words containing common vowels (A, E, I, O, U)</li>
+                    <li>Use feedback to eliminate impossible letters</li>
+                    <li>Pay attention to letter positions in yellow hints</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <h3 style="margin-bottom: 1rem; color: #ffd700;">Guess the Word:</h3>
+                <div class="word-grid" id="game7-grid"></div>
+                <div class="keyboard" id="game7-keyboard"></div>
+                <div class="btn-group">
+                    <button class="game-btn restart-btn" onclick="generateGame7()">New Word</button>
+                </div>
+                <div class="feedback" id="game7-feedback"></div>
+            </div>
+
+            <div class="video-section">
+                <h3>🎬 Video Tutorial</h3>
+                <div class="video-player">
+                    <div class="video-header">
+                        <span class="video-dot red"></span>
+                        <span class="video-dot yellow"></span>
+                        <span class="video-dot green"></span>
+                        <span class="video-title">Word Deduction Tutorial</span>
+                    </div>
+                    <div class="video-canvas" id="tutorial7-canvas">
+                        <div class="play-overlay" id="tutorial7-overlay" onclick="startTutorial(7)">
+                            <div class="play-circle">
+                                <div class="play-triangle"></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-content" id="tutorial7-content"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="tutorial7-playpause" onclick="toggleTutorial(7)">▶</button>
+                        <div class="progress-bar" onclick="seekTutorial(event, 7)">
+                            <div class="progress-fill" id="tutorial7-progress"></div>
+                        </div>
+                        <span class="time-display" id="tutorial7-time">0:00 / 0:18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         GAME 8: MEMORY SEQUENCE CHALLENGE
+         ============================================================ -->
+    <div id="game8-screen" class="screen">
+        <div class="game-screen">
+            <button class="back-btn" onclick="showScreen('home')">← Back to Home</button>
+
+            <div class="game-header">
+                <h1 class="game-title">🧠 Memory Sequence</h1>
+                <p class="game-subtitle">Remember and repeat the color sequence</p>
+            </div>
+
+            <div class="info-panel">
+                <h3>📖 How to Play</h3>
+                <ol>
+                    <li>Watch the sequence of colors light up</li>
+                    <li>Click the colors in the same order</li>
+                    <li>Each round adds one more color to remember</li>
+                    <li>One mistake and it's game over!</li>
+                </ol>
+            </div>
+
+            <div class="info-panel objectives-panel">
+                <h3>🎯 Objectives & Benefits</h3>
+                <p><strong>Goal:</strong> Remember and repeat increasingly longer sequences.</p>
+                <p><strong>Benefits:</strong> Strengthens short-term memory, concentration, and sequential processing abilities.</p>
+            </div>
+
+            <div class="info-panel hints-panel">
+                <h3>💡 Hints</h3>
+                <ul>
+                    <li>Focus on the pattern, not individual colors</li>
+                    <li>Try saying the colors aloud as they appear</li>
+                    <li>Take your time - there's no rush to click</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <div class="memory-status" id="game8-status">Press Start to begin!</div>
+                <div class="memory-level">Level: <span id="game8-level">1</span></div>
+                <div class="memory-board" id="game8-board">
+                    <button class="memory-btn red" data-color="red" onclick="memoryClick('red')"></button>
+                    <button class="memory-btn blue" data-color="blue" onclick="memoryClick('blue')"></button>
+                    <button class="memory-btn green" data-color="green" onclick="memoryClick('green')"></button>
+                    <button class="memory-btn yellow" data-color="yellow" onclick="memoryClick('yellow')"></button>
+                </div>
+                <div class="btn-group">
+                    <button class="game-btn check-btn" id="game8-start" onclick="startMemoryGame()">Start Game</button>
+                    <button class="game-btn restart-btn" onclick="generateGame8()">Reset</button>
+                </div>
+                <div class="feedback" id="game8-feedback"></div>
+            </div>
+
+            <div class="video-section">
+                <h3>🎬 Video Tutorial</h3>
+                <div class="video-player">
+                    <div class="video-header">
+                        <span class="video-dot red"></span>
+                        <span class="video-dot yellow"></span>
+                        <span class="video-dot green"></span>
+                        <span class="video-title">Memory Sequence Tutorial</span>
+                    </div>
+                    <div class="video-canvas" id="tutorial8-canvas">
+                        <div class="play-overlay" id="tutorial8-overlay" onclick="startTutorial(8)">
+                            <div class="play-circle">
+                                <div class="play-triangle"></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-content" id="tutorial8-content"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="tutorial8-playpause" onclick="toggleTutorial(8)">▶</button>
+                        <div class="progress-bar" onclick="seekTutorial(event, 8)">
+                            <div class="progress-fill" id="tutorial8-progress"></div>
+                        </div>
+                        <span class="time-display" id="tutorial8-time">0:00 / 0:15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         GAME 9: COLOR PATTERN ROTATION PUZZLE
+         ============================================================ -->
+    <div id="game9-screen" class="screen">
+        <div class="game-screen">
+            <button class="back-btn" onclick="showScreen('home')">← Back to Home</button>
+
+            <div class="game-header">
+                <h1 class="game-title">🎨 Color Pattern Rotation</h1>
+                <p class="game-subtitle">Rotate tiles to match the target pattern</p>
+            </div>
+
+            <div class="info-panel">
+                <h3>📖 How to Play</h3>
+                <ol>
+                    <li>Look at the target pattern on the right</li>
+                    <li>Click tiles in your grid to rotate their colors</li>
+                    <li>Each click cycles through 4 colors</li>
+                    <li>Match your grid exactly to the target to win</li>
+                </ol>
+            </div>
+
+            <div class="info-panel objectives-panel">
+                <h3>🎯 Objectives & Benefits</h3>
+                <p><strong>Goal:</strong> Transform your grid to match the target pattern.</p>
+                <p><strong>Benefits:</strong> Enhances visual pattern recognition, color differentiation, and systematic problem-solving.</p>
+            </div>
+
+            <div class="info-panel hints-panel">
+                <h3>💡 Hints</h3>
+                <ul>
+                    <li>Work on one tile at a time</li>
+                    <li>Remember the color cycle: Red → Blue → Green → Purple</li>
+                    <li>Count clicks needed for each tile</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <h3 style="margin-bottom: 1rem; color: #ffd700;">Match the Pattern:</h3>
+                <div class="pattern-container">
+                    <div class="pattern-box">
+                        <h4>Your Grid</h4>
+                        <div class="rotation-grid" id="game9-player" style="grid-template-columns: repeat(3, 1fr);"></div>
+                        <p class="rotation-hint">Click to rotate</p>
+                    </div>
+                    <div class="pattern-box target-grid">
+                        <h4>Target</h4>
+                        <div class="rotation-grid" id="game9-target" style="grid-template-columns: repeat(3, 1fr);"></div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="game-btn check-btn" onclick="checkGame9()">Check Match</button>
+                    <button class="game-btn restart-btn" onclick="generateGame9()">New Puzzle</button>
+                </div>
+                <div class="feedback" id="game9-feedback"></div>
+            </div>
+
+            <div class="video-section">
+                <h3>🎬 Video Tutorial</h3>
+                <div class="video-player">
+                    <div class="video-header">
+                        <span class="video-dot red"></span>
+                        <span class="video-dot yellow"></span>
+                        <span class="video-dot green"></span>
+                        <span class="video-title">Color Rotation Tutorial</span>
+                    </div>
+                    <div class="video-canvas" id="tutorial9-canvas">
+                        <div class="play-overlay" id="tutorial9-overlay" onclick="startTutorial(9)">
+                            <div class="play-circle">
+                                <div class="play-triangle"></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-content" id="tutorial9-content"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="tutorial9-playpause" onclick="toggleTutorial(9)">▶</button>
+                        <div class="progress-bar" onclick="seekTutorial(event, 9)">
+                            <div class="progress-fill" id="tutorial9-progress"></div>
+                        </div>
+                        <span class="time-display" id="tutorial9-time">0:00 / 0:15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         GAME 10: LOGIC GRID DETECTIVE PUZZLE
+         ============================================================ -->
+    <div id="game10-screen" class="screen">
+        <div class="game-screen">
+            <button class="back-btn" onclick="showScreen('home')">← Back to Home</button>
+
+            <div class="game-header">
+                <h1 class="game-title">🔍 Logic Grid Detective</h1>
+                <p class="game-subtitle">Use clues to solve the mystery</p>
+            </div>
+
+            <div class="info-panel">
+                <h3>📖 How to Play</h3>
+                <ol>
+                    <li>Read the clues carefully</li>
+                    <li>Click grid cells to mark: ✓ (yes) or ✗ (no)</li>
+                    <li>Each person has exactly one item</li>
+                    <li>Use elimination to find all matches</li>
+                </ol>
+            </div>
+
+            <div class="info-panel objectives-panel">
+                <h3>🎯 Objectives & Benefits</h3>
+                <p><strong>Goal:</strong> Determine which person owns which item using logic clues.</p>
+                <p><strong>Benefits:</strong> Develops deductive reasoning, process of elimination skills, and logical inference abilities.</p>
+            </div>
+
+            <div class="info-panel hints-panel">
+                <h3>💡 Hints</h3>
+                <ul>
+                    <li>Start with definite clues (X is NOT Y)</li>
+                    <li>When you find a match, eliminate that option for others</li>
+                    <li>Cross-reference multiple clues together</li>
+                </ul>
+            </div>
+
+            <div class="puzzle-container">
+                <h3 style="margin-bottom: 1rem; color: #ffd700;">Solve the Mystery:</h3>
+                <ul class="clue-list" id="game10-clues"></ul>
+                <div class="detective-grid" id="game10-grid" style="grid-template-columns: repeat(4, 1fr);"></div>
+                <div class="btn-group">
+                    <button class="game-btn check-btn" onclick="checkGame10()">Check Solution</button>
+                    <button class="game-btn restart-btn" onclick="generateGame10()">New Puzzle</button>
+                </div>
+                <div class="feedback" id="game10-feedback"></div>
+            </div>
+
+            <div class="video-section">
+                <h3>🎬 Video Tutorial</h3>
+                <div class="video-player">
+                    <div class="video-header">
+                        <span class="video-dot red"></span>
+                        <span class="video-dot yellow"></span>
+                        <span class="video-dot green"></span>
+                        <span class="video-title">Logic Grid Tutorial</span>
+                    </div>
+                    <div class="video-canvas" id="tutorial10-canvas">
+                        <div class="play-overlay" id="tutorial10-overlay" onclick="startTutorial(10)">
+                            <div class="play-circle">
+                                <div class="play-triangle"></div>
+                            </div>
+                        </div>
+                        <div class="tutorial-content" id="tutorial10-content"></div>
+                    </div>
+                    <div class="video-controls">
+                        <button class="control-btn" id="tutorial10-playpause" onclick="toggleTutorial(10)">▶</button>
+                        <div class="progress-bar" onclick="seekTutorial(event, 10)">
+                            <div class="progress-fill" id="tutorial10-progress"></div>
+                        </div>
+                        <span class="time-display" id="tutorial10-time">0:00 / 0:18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
          JAVASCRIPT - Game Logic & Interactivity
          ============================================================ -->
     <script>
@@ -1723,6 +2440,11 @@
             if (screenId === 'game3') generateGame3();
             if (screenId === 'game4') generateGame4();
             if (screenId === 'game5') generateGame5();
+            if (screenId === 'game6') generateGame6();
+            if (screenId === 'game7') generateGame7();
+            if (screenId === 'game8') generateGame8();
+            if (screenId === 'game9') generateGame9();
+            if (screenId === 'game10') generateGame10();
         }
 
         /* ===========================================================
@@ -2119,6 +2841,580 @@
         }
 
         /* ===========================================================
+           GAME 6: PATH FINDER LOGIC MAZE
+           =========================================================== */
+        let game6Data = {};
+
+        function generateGame6() {
+            document.getElementById('game6-feedback').classList.remove('show');
+
+            // Create a 5x5 maze
+            const size = 5;
+            const maze = [];
+            const arrows = ['↑', '→', '↓', '←', '↗', '↘', '↙', '↖'];
+
+            // Generate maze with start at top-left and end at bottom-right
+            for (let i = 0; i < size * size; i++) {
+                maze.push({
+                    isWall: Math.random() < 0.2 && i !== 0 && i !== size * size - 1,
+                    arrow: arrows[Math.floor(Math.random() * arrows.length)]
+                });
+            }
+
+            // Ensure start and end are not walls
+            maze[0].isWall = false;
+            maze[size * size - 1].isWall = false;
+
+            game6Data = { maze, size, currentPos: 0, path: [0] };
+            renderMaze();
+        }
+
+        function renderMaze() {
+            const grid = document.getElementById('game6-maze');
+            grid.innerHTML = '';
+            const { maze, size, currentPos } = game6Data;
+
+            maze.forEach((cell, idx) => {
+                const div = document.createElement('div');
+                div.className = 'maze-cell';
+
+                if (cell.isWall) {
+                    div.classList.add('wall');
+                    div.textContent = '▓';
+                } else if (idx === 0) {
+                    div.classList.add('start');
+                    div.textContent = 'S';
+                } else if (idx === size * size - 1) {
+                    div.classList.add('end');
+                    div.textContent = 'E';
+                } else {
+                    div.textContent = cell.arrow;
+                }
+
+                if (idx === currentPos) {
+                    div.classList.add('current');
+                }
+                if (game6Data.path.includes(idx) && idx !== currentPos) {
+                    div.classList.add('path');
+                }
+
+                div.onclick = () => moveTo(idx);
+                grid.appendChild(div);
+            });
+        }
+
+        function moveTo(idx) {
+            const { maze, size, currentPos } = game6Data;
+            if (maze[idx].isWall) return;
+
+            // Check if adjacent
+            const currentRow = Math.floor(currentPos / size);
+            const currentCol = currentPos % size;
+            const targetRow = Math.floor(idx / size);
+            const targetCol = idx % size;
+
+            const rowDiff = Math.abs(currentRow - targetRow);
+            const colDiff = Math.abs(currentCol - targetCol);
+
+            if (rowDiff <= 1 && colDiff <= 1 && (rowDiff + colDiff > 0)) {
+                game6Data.currentPos = idx;
+                game6Data.path.push(idx);
+                renderMaze();
+
+                // Check win
+                if (idx === size * size - 1) {
+                    const feedback = document.getElementById('game6-feedback');
+                    feedback.className = 'feedback show win';
+                    feedback.textContent = `🎉 You found the path in ${game6Data.path.length} moves!`;
+                }
+            }
+        }
+
+        /* ===========================================================
+           GAME 7: WORD DEDUCTION MINI-GAME
+           =========================================================== */
+        let game7Data = {};
+        const wordList = ['APPLE', 'BRAIN', 'CHASE', 'DREAM', 'EAGLE', 'FLAME', 'GRAPE', 'HEART', 'JUICE', 'KNEEL', 'LEMON', 'MANGO', 'NIGHT', 'OCEAN', 'PIANO', 'QUEEN', 'RIVER', 'STONE', 'TIGER', 'UNITY', 'VOICE', 'WATER', 'YOUTH', 'ZEBRA', 'BLEND', 'CRISP', 'DRIFT', 'FROST', 'GLOBE', 'HOUSE', 'LIGHT', 'MAPLE', 'NORTH', 'PEARL', 'QUIET', 'REACT', 'SHINE', 'THINK', 'ULTRA', 'VIVID', 'WHEAT', 'WRITE'];
+
+        function generateGame7() {
+            document.getElementById('game7-feedback').classList.remove('show');
+
+            const targetWord = wordList[Math.floor(Math.random() * wordList.length)];
+            game7Data = {
+                target: targetWord,
+                currentRow: 0,
+                currentCol: 0,
+                guesses: [],
+                letterStates: {},
+                gameOver: false
+            };
+
+            renderWordGrid();
+            renderKeyboard();
+        }
+
+        function renderWordGrid() {
+            const grid = document.getElementById('game7-grid');
+            grid.innerHTML = '';
+
+            for (let row = 0; row < 6; row++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'word-row';
+
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'letter-cell';
+                    cell.id = `cell-${row}-${col}`;
+
+                    if (game7Data.guesses[row]) {
+                        cell.textContent = game7Data.guesses[row][col].letter;
+                        cell.classList.add(game7Data.guesses[row][col].state);
+                    } else if (row === game7Data.currentRow && col < game7Data.currentCol) {
+                        // Show current input
+                    }
+
+                    if (row === game7Data.currentRow && col === game7Data.currentCol && !game7Data.gameOver) {
+                        cell.classList.add('active');
+                    }
+
+                    rowDiv.appendChild(cell);
+                }
+                grid.appendChild(rowDiv);
+            }
+        }
+
+        function renderKeyboard() {
+            const keyboard = document.getElementById('game7-keyboard');
+            const rows = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
+
+            keyboard.innerHTML = '';
+            rows.forEach((row, rowIdx) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+
+                if (rowIdx === 2) {
+                    const enterBtn = document.createElement('button');
+                    enterBtn.className = 'key-btn wide';
+                    enterBtn.textContent = 'Enter';
+                    enterBtn.onclick = () => submitGuess();
+                    rowDiv.appendChild(enterBtn);
+                }
+
+                row.split('').forEach(letter => {
+                    const btn = document.createElement('button');
+                    btn.className = 'key-btn';
+                    btn.textContent = letter;
+                    if (game7Data.letterStates[letter]) {
+                        btn.classList.add(game7Data.letterStates[letter]);
+                    }
+                    btn.onclick = () => typeLetter(letter);
+                    rowDiv.appendChild(btn);
+                });
+
+                if (rowIdx === 2) {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'key-btn wide';
+                    delBtn.textContent = '⌫';
+                    delBtn.onclick = () => deleteLetter();
+                    rowDiv.appendChild(delBtn);
+                }
+
+                keyboard.appendChild(rowDiv);
+            });
+        }
+
+        function typeLetter(letter) {
+            if (game7Data.gameOver || game7Data.currentCol >= 5) return;
+
+            const cell = document.getElementById(`cell-${game7Data.currentRow}-${game7Data.currentCol}`);
+            cell.textContent = letter;
+            game7Data.currentCol++;
+            renderWordGrid();
+        }
+
+        function deleteLetter() {
+            if (game7Data.currentCol <= 0) return;
+
+            game7Data.currentCol--;
+            const cell = document.getElementById(`cell-${game7Data.currentRow}-${game7Data.currentCol}`);
+            cell.textContent = '';
+            renderWordGrid();
+        }
+
+        function submitGuess() {
+            if (game7Data.currentCol !== 5) return;
+
+            const guess = [];
+            for (let i = 0; i < 5; i++) {
+                guess.push(document.getElementById(`cell-${game7Data.currentRow}-${i}`).textContent);
+            }
+            const guessWord = guess.join('');
+
+            // Check each letter
+            const result = [];
+            const targetLetters = game7Data.target.split('');
+            const usedIndices = [];
+
+            // First pass: correct positions
+            for (let i = 0; i < 5; i++) {
+                if (guess[i] === targetLetters[i]) {
+                    result[i] = { letter: guess[i], state: 'correct' };
+                    usedIndices.push(i);
+                    game7Data.letterStates[guess[i]] = 'correct';
+                }
+            }
+
+            // Second pass: present but wrong position
+            for (let i = 0; i < 5; i++) {
+                if (!result[i]) {
+                    const targetIdx = targetLetters.findIndex((l, idx) => l === guess[i] && !usedIndices.includes(idx));
+                    if (targetIdx !== -1) {
+                        result[i] = { letter: guess[i], state: 'present' };
+                        usedIndices.push(targetIdx);
+                        if (game7Data.letterStates[guess[i]] !== 'correct') {
+                            game7Data.letterStates[guess[i]] = 'present';
+                        }
+                    } else {
+                        result[i] = { letter: guess[i], state: 'absent' };
+                        if (!game7Data.letterStates[guess[i]]) {
+                            game7Data.letterStates[guess[i]] = 'absent';
+                        }
+                    }
+                }
+            }
+
+            game7Data.guesses.push(result);
+            game7Data.currentRow++;
+            game7Data.currentCol = 0;
+
+            const feedback = document.getElementById('game7-feedback');
+
+            if (guessWord === game7Data.target) {
+                game7Data.gameOver = true;
+                feedback.className = 'feedback show win';
+                feedback.textContent = `🎉 Excellent! You guessed "${game7Data.target}" in ${game7Data.currentRow} tries!`;
+            } else if (game7Data.currentRow >= 6) {
+                game7Data.gameOver = true;
+                feedback.className = 'feedback show lose';
+                feedback.textContent = `❌ Game Over! The word was "${game7Data.target}"`;
+            }
+
+            renderWordGrid();
+            renderKeyboard();
+        }
+
+        // Keyboard input for word game
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('game7-screen').classList.contains('active')) return;
+            if (game7Data.gameOver) return;
+
+            if (e.key === 'Enter') {
+                submitGuess();
+            } else if (e.key === 'Backspace') {
+                deleteLetter();
+            } else if (/^[a-zA-Z]$/.test(e.key)) {
+                typeLetter(e.key.toUpperCase());
+            }
+        });
+
+        /* ===========================================================
+           GAME 8: MEMORY SEQUENCE CHALLENGE
+           =========================================================== */
+        let game8Data = { sequence: [], playerIndex: 0, level: 1, playing: false, canClick: false };
+        const memoryColors = ['red', 'blue', 'green', 'yellow'];
+
+        function generateGame8() {
+            game8Data = { sequence: [], playerIndex: 0, level: 1, playing: false, canClick: false };
+            document.getElementById('game8-feedback').classList.remove('show');
+            document.getElementById('game8-status').textContent = 'Press Start to begin!';
+            document.getElementById('game8-level').textContent = '1';
+            document.getElementById('game8-start').disabled = false;
+            enableMemoryButtons(false);
+        }
+
+        function startMemoryGame() {
+            if (game8Data.playing) return;
+            game8Data.playing = true;
+            document.getElementById('game8-start').disabled = true;
+            document.getElementById('game8-feedback').classList.remove('show');
+            addToSequence();
+        }
+
+        function addToSequence() {
+            game8Data.sequence.push(memoryColors[Math.floor(Math.random() * 4)]);
+            game8Data.playerIndex = 0;
+            document.getElementById('game8-level').textContent = game8Data.sequence.length;
+            document.getElementById('game8-status').textContent = 'Watch the sequence...';
+            enableMemoryButtons(false);
+            playSequence();
+        }
+
+        function playSequence() {
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i > 0) {
+                    highlightButton(game8Data.sequence[i - 1], false);
+                }
+                if (i < game8Data.sequence.length) {
+                    highlightButton(game8Data.sequence[i], true);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('game8-status').textContent = 'Your turn! Repeat the sequence';
+                        game8Data.canClick = true;
+                        enableMemoryButtons(true);
+                    }, 300);
+                }
+            }, 600);
+        }
+
+        function highlightButton(color, on) {
+            const btn = document.querySelector(`.memory-btn.${color}`);
+            if (on) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+
+        function enableMemoryButtons(enabled) {
+            document.querySelectorAll('.memory-btn').forEach(btn => {
+                btn.disabled = !enabled;
+            });
+        }
+
+        function memoryClick(color) {
+            if (!game8Data.canClick) return;
+
+            highlightButton(color, true);
+            setTimeout(() => highlightButton(color, false), 200);
+
+            if (color === game8Data.sequence[game8Data.playerIndex]) {
+                game8Data.playerIndex++;
+
+                if (game8Data.playerIndex === game8Data.sequence.length) {
+                    // Success! Next level
+                    game8Data.canClick = false;
+                    document.getElementById('game8-status').textContent = 'Correct! Next level...';
+                    setTimeout(() => addToSequence(), 1000);
+                }
+            } else {
+                // Wrong!
+                game8Data.canClick = false;
+                game8Data.playing = false;
+                enableMemoryButtons(false);
+                const feedback = document.getElementById('game8-feedback');
+                feedback.className = 'feedback show lose';
+                feedback.textContent = `❌ Game Over! You reached level ${game8Data.sequence.length}`;
+                document.getElementById('game8-status').textContent = 'Press Reset to try again';
+                document.getElementById('game8-start').disabled = false;
+            }
+        }
+
+        /* ===========================================================
+           GAME 9: COLOR PATTERN ROTATION PUZZLE
+           =========================================================== */
+        let game9Data = { player: [], target: [] };
+        const colorClasses = ['c1', 'c2', 'c3', 'c4'];
+
+        function generateGame9() {
+            document.getElementById('game9-feedback').classList.remove('show');
+
+            // Generate random target pattern
+            const target = [];
+            const player = [];
+            for (let i = 0; i < 9; i++) {
+                target.push(Math.floor(Math.random() * 4));
+                player.push(Math.floor(Math.random() * 4));
+            }
+
+            game9Data = { player, target };
+            renderColorGrids();
+        }
+
+        function renderColorGrids() {
+            const playerGrid = document.getElementById('game9-player');
+            const targetGrid = document.getElementById('game9-target');
+
+            playerGrid.innerHTML = '';
+            targetGrid.innerHTML = '';
+
+            game9Data.player.forEach((colorIdx, i) => {
+                const tile = document.createElement('div');
+                tile.className = `color-tile ${colorClasses[colorIdx]}`;
+                tile.onclick = () => rotateColor(i);
+                playerGrid.appendChild(tile);
+            });
+
+            game9Data.target.forEach(colorIdx => {
+                const tile = document.createElement('div');
+                tile.className = `color-tile ${colorClasses[colorIdx]}`;
+                targetGrid.appendChild(tile);
+            });
+        }
+
+        function rotateColor(index) {
+            game9Data.player[index] = (game9Data.player[index] + 1) % 4;
+            renderColorGrids();
+        }
+
+        function checkGame9() {
+            const feedback = document.getElementById('game9-feedback');
+            const match = game9Data.player.every((c, i) => c === game9Data.target[i]);
+
+            if (match) {
+                feedback.className = 'feedback show win';
+                feedback.textContent = '🎉 Perfect match! You solved the puzzle!';
+            } else {
+                feedback.className = 'feedback show lose';
+                feedback.textContent = '❌ Not quite. Keep rotating to match the target!';
+            }
+        }
+
+        /* ===========================================================
+           GAME 10: LOGIC GRID DETECTIVE PUZZLE
+           =========================================================== */
+        let game10Data = {};
+
+        const detectivePuzzles = [
+            {
+                people: ['Alice', 'Bob', 'Carol'],
+                items: ['Book', 'Phone', 'Keys'],
+                solution: { Alice: 'Phone', Bob: 'Keys', Carol: 'Book' },
+                clues: [
+                    'Alice does not have the Book',
+                    'Bob does not have the Phone',
+                    'Carol has the Book'
+                ]
+            },
+            {
+                people: ['Dan', 'Eve', 'Frank'],
+                items: ['Hat', 'Bag', 'Watch'],
+                solution: { Dan: 'Watch', Eve: 'Hat', Frank: 'Bag' },
+                clues: [
+                    'Dan has the Watch',
+                    'Eve does not have the Bag',
+                    'Frank does not have the Watch'
+                ]
+            },
+            {
+                people: ['Grace', 'Henry', 'Ivy'],
+                items: ['Red', 'Blue', 'Green'],
+                solution: { Grace: 'Blue', Henry: 'Red', Ivy: 'Green' },
+                clues: [
+                    'Grace does not have Red',
+                    'Henry does not have Green',
+                    'Ivy has Green'
+                ]
+            }
+        ];
+
+        function generateGame10() {
+            document.getElementById('game10-feedback').classList.remove('show');
+
+            const puzzle = detectivePuzzles[Math.floor(Math.random() * detectivePuzzles.length)];
+            game10Data = {
+                ...puzzle,
+                grid: {} // Will store user's marks
+            };
+
+            // Initialize grid
+            puzzle.people.forEach(person => {
+                game10Data.grid[person] = {};
+                puzzle.items.forEach(item => {
+                    game10Data.grid[person][item] = 0; // 0=empty, 1=yes, 2=no
+                });
+            });
+
+            renderDetectiveGrid();
+            renderClues();
+        }
+
+        function renderClues() {
+            const clueList = document.getElementById('game10-clues');
+            clueList.innerHTML = game10Data.clues.map(clue => `<li>${clue}</li>`).join('');
+        }
+
+        function renderDetectiveGrid() {
+            const grid = document.getElementById('game10-grid');
+            grid.innerHTML = '';
+
+            const { people, items } = game10Data;
+
+            // Header row
+            const emptyHeader = document.createElement('div');
+            emptyHeader.className = 'detective-cell header';
+            grid.appendChild(emptyHeader);
+
+            items.forEach(item => {
+                const header = document.createElement('div');
+                header.className = 'detective-cell header';
+                header.textContent = item.substring(0, 4);
+                header.title = item;
+                grid.appendChild(header);
+            });
+
+            // Data rows
+            people.forEach(person => {
+                const nameCell = document.createElement('div');
+                nameCell.className = 'detective-cell header';
+                nameCell.textContent = person.substring(0, 4);
+                nameCell.title = person;
+                grid.appendChild(nameCell);
+
+                items.forEach(item => {
+                    const cell = document.createElement('div');
+                    cell.className = 'detective-cell';
+                    cell.dataset.person = person;
+                    cell.dataset.item = item;
+
+                    const state = game10Data.grid[person][item];
+                    if (state === 1) {
+                        cell.classList.add('yes');
+                        cell.textContent = '✓';
+                    } else if (state === 2) {
+                        cell.classList.add('no');
+                        cell.textContent = '✗';
+                    }
+
+                    cell.onclick = () => toggleDetectiveCell(person, item);
+                    grid.appendChild(cell);
+                });
+            });
+        }
+
+        function toggleDetectiveCell(person, item) {
+            const current = game10Data.grid[person][item];
+            game10Data.grid[person][item] = (current + 1) % 3;
+            renderDetectiveGrid();
+        }
+
+        function checkGame10() {
+            const feedback = document.getElementById('game10-feedback');
+            const { people, items, solution, grid } = game10Data;
+
+            let correct = true;
+            people.forEach(person => {
+                items.forEach(item => {
+                    const shouldBeYes = solution[person] === item;
+                    const userMarked = grid[person][item];
+
+                    if (shouldBeYes && userMarked !== 1) correct = false;
+                    if (!shouldBeYes && userMarked === 1) correct = false;
+                });
+            });
+
+            if (correct) {
+                feedback.className = 'feedback show win';
+                feedback.textContent = '🎉 Case solved! You found all the correct matches!';
+            } else {
+                feedback.className = 'feedback show lose';
+                feedback.textContent = '❌ Not quite right. Review the clues and try again!';
+            }
+        }
+
+        /* ===========================================================
            VIDEO TUTORIAL SIMULATOR
            =========================================================== */
         const tutorials = {
@@ -2126,11 +3422,16 @@
             2: { duration: 18, currentStep: 0 },
             3: { duration: 15, currentStep: 0 },
             4: { duration: 12, currentStep: 0 },
-            5: { duration: 18, currentStep: 0 }
+            5: { duration: 18, currentStep: 0 },
+            6: { duration: 15, currentStep: 0 },
+            7: { duration: 18, currentStep: 0 },
+            8: { duration: 15, currentStep: 0 },
+            9: { duration: 15, currentStep: 0 },
+            10: { duration: 18, currentStep: 0 }
         };
 
         const tutorialState = {};
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 10; i++) {
             tutorialState[i] = { playing: false, currentTime: 0, interval: null };
         }
 
@@ -2208,6 +3509,11 @@
             else if (n === 3) renderTutorial3(content, time);
             else if (n === 4) renderTutorial4(content, time);
             else if (n === 5) renderTutorial5(content, time);
+            else if (n === 6) renderTutorial6(content, time);
+            else if (n === 7) renderTutorial7(content, time);
+            else if (n === 8) renderTutorial8(content, time);
+            else if (n === 9) renderTutorial9(content, time);
+            else if (n === 10) renderTutorial10(content, time);
         }
 
         // Tutorial 1: Number Pattern
@@ -2389,11 +3695,705 @@
             `;
         }
 
+        // Tutorial 6: Path Finder Maze
+        function renderTutorial6(container, time) {
+            let step, caption, hint;
+            const mazeDemo = ['S', '→', '↓', '▓', '▓', '▓', '↓', '→', '↓', '▓', '▓', '▓', '→', '→', 'E'];
+            let currentPos = 0;
+
+            if (time < 3) {
+                step = 1; caption = "Path Finder Maze!"; hint = "Navigate from S to E"; currentPos = 0;
+            } else if (time < 6) {
+                step = 2; caption = "Start at 'S' (green cell)"; hint = "Click adjacent cells to move"; currentPos = 0;
+            } else if (time < 9) {
+                step = 3; caption = "Move right, following arrows"; hint = "Avoid dark walls!"; currentPos = 1;
+            } else if (time < 12) {
+                step = 4; caption = "Continue down and right..."; hint = "Plan your path ahead"; currentPos = 7;
+            } else {
+                step = 5; caption = "Reached the End! 🎉"; hint = "You found the path!"; currentPos = 14;
+            }
+
+            container.innerHTML = `
+                <div class="tutorial-step">Step ${step} of 5</div>
+                <div class="tutorial-caption">${caption}</div>
+                <div class="tutorial-demo">
+                    <div style="display: grid; grid-template-columns: repeat(5, 40px); gap: 4px; justify-content: center;">
+                        ${mazeDemo.map((cell, i) => {
+                            let bg = 'rgba(255,255,255,0.1)';
+                            if (cell === 'S') bg = '#28a745';
+                            else if (cell === 'E') bg = 'linear-gradient(135deg, #ffd700, #ff6b6b)';
+                            else if (cell === '▓') bg = 'rgba(0,0,0,0.5)';
+                            if (i === currentPos && cell !== 'S' && cell !== 'E') bg = 'rgba(102, 126, 234, 0.7)';
+                            return `<div style="width: 40px; height: 40px; background: ${bg}; border-radius: 6px;
+                                display: flex; align-items: center; justify-content: center; font-size: 1rem;
+                                ${i === currentPos ? 'box-shadow: 0 0 10px #ffd700;' : ''}">${cell}</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="tutorial-hint">${hint}</div>
+            `;
+        }
+
+        // Tutorial 7: Word Deduction
+        function renderTutorial7(container, time) {
+            let step, caption, hint;
+            const word = 'BRAIN';
+            let guess = ['', '', '', '', ''];
+            let states = ['', '', '', '', ''];
+
+            if (time < 3.6) {
+                step = 1; caption = "Word Deduction Game!"; hint = "Guess the 5-letter word";
+            } else if (time < 7.2) {
+                step = 2; caption = "Type your first guess"; hint = "Try 'CRANE' - it has common letters";
+                guess = ['C', 'R', 'A', 'N', 'E']; states = ['absent', 'present', 'present', 'present', 'absent'];
+            } else if (time < 10.8) {
+                step = 3; caption = "Yellow = right letter, wrong spot"; hint = "R, A, N are in the word!";
+                guess = ['C', 'R', 'A', 'N', 'E']; states = ['absent', 'present', 'present', 'present', 'absent'];
+            } else if (time < 14.4) {
+                step = 4; caption = "Try 'BRAIN' with those letters"; hint = "Rearrange the yellow letters";
+                guess = ['B', 'R', 'A', 'I', 'N']; states = ['correct', 'correct', 'correct', 'correct', 'correct'];
+            } else {
+                step = 5; caption = "BRAIN is correct! 🎉"; hint = "Use feedback to find the word!";
+                guess = ['B', 'R', 'A', 'I', 'N']; states = ['correct', 'correct', 'correct', 'correct', 'correct'];
+            }
+
+            container.innerHTML = `
+                <div class="tutorial-step">Step ${step} of 5</div>
+                <div class="tutorial-caption">${caption}</div>
+                <div class="tutorial-demo">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        ${guess.map((l, i) => {
+                            let bg = 'rgba(255,255,255,0.1)';
+                            if (states[i] === 'correct') bg = '#28a745';
+                            else if (states[i] === 'present') bg = '#ffc107';
+                            else if (states[i] === 'absent') bg = '#666';
+                            return `<div style="width: 45px; height: 45px; background: ${bg}; border-radius: 8px;
+                                display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+                                font-weight: bold; color: ${states[i] === 'present' ? '#1a1a2e' : '#fff'}">${l}</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+                <div class="tutorial-hint">${hint}</div>
+            `;
+        }
+
+        // Tutorial 8: Memory Sequence
+        function renderTutorial8(container, time) {
+            let step, caption, hint;
+            let active = '';
+
+            if (time < 3) {
+                step = 1; caption = "Memory Sequence!"; hint = "Watch and repeat the pattern";
+            } else if (time < 6) {
+                step = 2; caption = "Watch: Red lights up"; hint = "Remember this color"; active = 'red';
+            } else if (time < 9) {
+                step = 3; caption = "Watch: Blue lights up"; hint = "Remember: Red, Blue"; active = 'blue';
+            } else if (time < 12) {
+                step = 4; caption = "Your turn! Click: Red, Blue"; hint = "Repeat in the same order";
+            } else {
+                step = 5; caption = "Correct! Level Up! 🎉"; hint = "Each level adds one more color";
+            }
+
+            const colors = [
+                { name: 'red', color: '#e74c3c' },
+                { name: 'blue', color: '#3498db' },
+                { name: 'green', color: '#2ecc71' },
+                { name: 'yellow', color: '#f1c40f' }
+            ];
+
+            container.innerHTML = `
+                <div class="tutorial-step">Step ${step} of 5</div>
+                <div class="tutorial-caption">${caption}</div>
+                <div class="tutorial-demo">
+                    <div style="display: grid; grid-template-columns: repeat(2, 60px); gap: 10px; justify-content: center;">
+                        ${colors.map(c => `
+                            <div style="width: 60px; height: 60px; background: ${c.color}; border-radius: 12px;
+                                opacity: ${c.name === active ? '1' : '0.5'};
+                                ${c.name === active ? 'box-shadow: 0 0 20px ' + c.color + '; transform: scale(1.1);' : ''}
+                                transition: all 0.3s;"></div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="tutorial-hint">${hint}</div>
+            `;
+        }
+
+        // Tutorial 9: Color Pattern Rotation
+        function renderTutorial9(container, time) {
+            let step, caption, hint;
+            const colors = ['#e74c3c', '#3498db', '#2ecc71', '#9b59b6'];
+            let player = [0, 0, 0, 0];
+            const target = [1, 2, 0, 3];
+
+            if (time < 3) {
+                step = 1; caption = "Color Pattern Rotation!"; hint = "Match your grid to the target";
+            } else if (time < 6) {
+                step = 2; caption = "Click tiles to rotate colors"; hint = "Red → Blue → Green → Purple";
+                player = [0, 0, 0, 0];
+            } else if (time < 9) {
+                step = 3; caption = "Rotating first tile..."; hint = "Each click cycles the color";
+                player = [1, 0, 0, 0];
+            } else if (time < 12) {
+                step = 4; caption = "Keep rotating to match"; hint = "Almost there!";
+                player = [1, 2, 0, 0];
+            } else {
+                step = 5; caption = "Perfect Match! 🎉"; hint = "All tiles match the target!";
+                player = [1, 2, 0, 3];
+            }
+
+            container.innerHTML = `
+                <div class="tutorial-step">Step ${step} of 5</div>
+                <div class="tutorial-caption">${caption}</div>
+                <div class="tutorial-demo">
+                    <div style="display: flex; gap: 2rem; justify-content: center; align-items: center;">
+                        <div>
+                            <div style="font-size: 0.8rem; margin-bottom: 0.5rem; color: #ffd700;">Your Grid</div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 40px); gap: 4px;">
+                                ${player.map(c => `<div style="width: 40px; height: 40px; background: ${colors[c]}; border-radius: 6px;"></div>`).join('')}
+                            </div>
+                        </div>
+                        <div style="font-size: 1.5rem;">→</div>
+                        <div>
+                            <div style="font-size: 0.8rem; margin-bottom: 0.5rem; color: #ffd700;">Target</div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 40px); gap: 4px;">
+                                ${target.map(c => `<div style="width: 40px; height: 40px; background: ${colors[c]}; border-radius: 6px;"></div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tutorial-hint">${hint}</div>
+            `;
+        }
+
+        // Tutorial 10: Logic Grid Detective
+        function renderTutorial10(container, time) {
+            let step, caption, hint;
+            const grid = [[0,0,0], [0,0,0], [0,0,0]]; // 0=empty, 1=yes, 2=no
+
+            if (time < 3.6) {
+                step = 1; caption = "Logic Grid Detective!"; hint = "Match people to items using clues";
+            } else if (time < 7.2) {
+                step = 2; caption = "Clue: Carol has the Book"; hint = "Mark ✓ for Carol-Book";
+                grid[2][0] = 1; // Carol-Book = yes
+            } else if (time < 10.8) {
+                step = 3; caption = "If Carol has Book..."; hint = "Others don't have Book";
+                grid[2][0] = 1; grid[0][0] = 2; grid[1][0] = 2;
+            } else if (time < 14.4) {
+                step = 4; caption = "Use more clues to solve"; hint = "Process of elimination";
+                grid[2][0] = 1; grid[0][0] = 2; grid[1][0] = 2;
+                grid[0][1] = 1; grid[1][2] = 1;
+            } else {
+                step = 5; caption = "Case Solved! 🎉"; hint = "All matches found!";
+                grid[2][0] = 1; grid[0][1] = 1; grid[1][2] = 1;
+                grid[0][0] = 2; grid[0][2] = 2; grid[1][0] = 2; grid[1][1] = 2; grid[2][1] = 2; grid[2][2] = 2;
+            }
+
+            const people = ['Alice', 'Bob', 'Carol'];
+            const items = ['Book', 'Phone', 'Keys'];
+
+            container.innerHTML = `
+                <div class="tutorial-step">Step ${step} of 5</div>
+                <div class="tutorial-caption">${caption}</div>
+                <div class="tutorial-demo">
+                    <div style="display: grid; grid-template-columns: repeat(4, 45px); gap: 2px; justify-content: center;">
+                        <div style="width: 45px; height: 30px;"></div>
+                        ${items.map(i => `<div style="width: 45px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; background: rgba(102,126,234,0.3); border-radius: 4px;">${i.substring(0,4)}</div>`).join('')}
+                        ${people.map((p, pi) => `
+                            <div style="width: 45px; height: 35px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; background: rgba(102,126,234,0.3); border-radius: 4px;">${p.substring(0,4)}</div>
+                            ${items.map((_, ii) => {
+                                const state = grid[pi][ii];
+                                let bg = 'rgba(0,0,0,0.3)';
+                                let text = '';
+                                if (state === 1) { bg = '#28a745'; text = '✓'; }
+                                else if (state === 2) { bg = 'rgba(220,53,69,0.5)'; text = '✗'; }
+                                return `<div style="width: 45px; height: 35px; display: flex; align-items: center; justify-content: center; background: ${bg}; border-radius: 4px; font-weight: bold;">${text}</div>`;
+                            }).join('')}
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="tutorial-hint">${hint}</div>
+            `;
+        }
+
+        /* ===========================================================
+           PWA - DYNAMIC MANIFEST GENERATION
+           =========================================================== */
+        const PWA_VERSION = '2.0.0';
+        const CACHE_NAME = `logic-puzzle-master-v${PWA_VERSION}`;
+
+        // Generate app icons as base64 SVG data URLs
+        function generateIconDataUrl(size) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}">
+                <defs>
+                    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0f0c29"/>
+                        <stop offset="50%" style="stop-color:#302b63"/>
+                        <stop offset="100%" style="stop-color:#24243e"/>
+                    </linearGradient>
+                </defs>
+                <rect fill="url(#bg)" width="${size}" height="${size}" rx="${size * 0.2}"/>
+                <text x="50%" y="58%" font-size="${size * 0.6}" text-anchor="middle" dominant-baseline="middle">🧩</text>
+            </svg>`;
+            return 'data:image/svg+xml;base64,' + btoa(svg);
+        }
+
+        // Create manifest object
+        const manifestData = {
+            name: "Logic Puzzle Master - Brain Training Games",
+            short_name: "Logic Puzzle",
+            description: "Train your brain with 10+ unique logic puzzle games. Play offline, no downloads required!",
+            start_url: window.location.pathname,
+            scope: window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1) || '/',
+            display: "standalone",
+            orientation: "any",
+            background_color: "#0f0c29",
+            theme_color: "#0f0c29",
+            categories: ["games", "education", "entertainment", "puzzle"],
+            lang: "en",
+            dir: "ltr",
+            icons: [
+                { src: generateIconDataUrl(72), sizes: "72x72", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(96), sizes: "96x96", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(128), sizes: "128x128", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(144), sizes: "144x144", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(152), sizes: "152x152", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(192), sizes: "192x192", type: "image/svg+xml", purpose: "any maskable" },
+                { src: generateIconDataUrl(384), sizes: "384x384", type: "image/svg+xml", purpose: "any" },
+                { src: generateIconDataUrl(512), sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+            ],
+            screenshots: [],
+            shortcuts: [
+                {
+                    name: "Number Pattern",
+                    short_name: "Numbers",
+                    description: "Play Number Pattern Puzzle",
+                    url: window.location.pathname + "#game1"
+                },
+                {
+                    name: "Word Deduction",
+                    short_name: "Words",
+                    description: "Play Word Deduction Game",
+                    url: window.location.pathname + "#game7"
+                },
+                {
+                    name: "Memory Challenge",
+                    short_name: "Memory",
+                    description: "Play Memory Sequence",
+                    url: window.location.pathname + "#game8"
+                }
+            ],
+            related_applications: [],
+            prefer_related_applications: false
+        };
+
+        // Create and inject manifest dynamically
+        function injectManifest() {
+            const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+
+            // Remove any existing manifest link
+            const existingManifest = document.querySelector('link[rel="manifest"]');
+            if (existingManifest) {
+                existingManifest.remove();
+            }
+
+            // Create and add new manifest link
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = manifestUrl;
+            document.head.appendChild(manifestLink);
+
+            console.log('PWA Manifest injected dynamically');
+        }
+
+        /* ===========================================================
+           PWA - DYNAMIC SERVICE WORKER GENERATION
+           =========================================================== */
+        const serviceWorkerCode = `
+            // Logic Puzzle Master Service Worker v${PWA_VERSION}
+            const CACHE_NAME = '${CACHE_NAME}';
+            const OFFLINE_URL = '${window.location.pathname}';
+
+            // Files to cache immediately
+            const PRECACHE_URLS = [
+                OFFLINE_URL,
+                '${window.location.href}'
+            ];
+
+            // Install event - cache core files
+            self.addEventListener('install', (event) => {
+                console.log('[SW] Installing Service Worker v${PWA_VERSION}');
+                event.waitUntil(
+                    caches.open(CACHE_NAME)
+                        .then((cache) => {
+                            console.log('[SW] Caching app shell');
+                            return cache.addAll(PRECACHE_URLS);
+                        })
+                        .then(() => {
+                            console.log('[SW] Skip waiting');
+                            return self.skipWaiting();
+                        })
+                );
+            });
+
+            // Activate event - clean up old caches
+            self.addEventListener('activate', (event) => {
+                console.log('[SW] Activating Service Worker v${PWA_VERSION}');
+                event.waitUntil(
+                    caches.keys().then((cacheNames) => {
+                        return Promise.all(
+                            cacheNames.map((cacheName) => {
+                                if (cacheName !== CACHE_NAME) {
+                                    console.log('[SW] Deleting old cache:', cacheName);
+                                    return caches.delete(cacheName);
+                                }
+                            })
+                        );
+                    }).then(() => {
+                        console.log('[SW] Claiming clients');
+                        return self.clients.claim();
+                    }).then(() => {
+                        // Notify all clients about the update
+                        self.clients.matchAll().then(clients => {
+                            clients.forEach(client => {
+                                client.postMessage({ type: 'SW_UPDATED', version: '${PWA_VERSION}' });
+                            });
+                        });
+                    })
+                );
+            });
+
+            // Fetch event - cache-first strategy with network fallback
+            self.addEventListener('fetch', (event) => {
+                // Skip non-GET requests
+                if (event.request.method !== 'GET') return;
+
+                // Skip chrome-extension and other non-http(s) requests
+                if (!event.request.url.startsWith('http')) return;
+
+                event.respondWith(
+                    caches.match(event.request)
+                        .then((cachedResponse) => {
+                            if (cachedResponse) {
+                                // Return cached version and update cache in background
+                                event.waitUntil(
+                                    fetch(event.request)
+                                        .then((networkResponse) => {
+                                            if (networkResponse && networkResponse.status === 200) {
+                                                caches.open(CACHE_NAME).then((cache) => {
+                                                    cache.put(event.request, networkResponse.clone());
+                                                });
+                                            }
+                                        })
+                                        .catch(() => {})
+                                );
+                                return cachedResponse;
+                            }
+
+                            // No cache, fetch from network
+                            return fetch(event.request)
+                                .then((networkResponse) => {
+                                    if (!networkResponse || networkResponse.status !== 200) {
+                                        return networkResponse;
+                                    }
+
+                                    // Cache the new response
+                                    const responseToCache = networkResponse.clone();
+                                    caches.open(CACHE_NAME).then((cache) => {
+                                        cache.put(event.request, responseToCache);
+                                    });
+
+                                    return networkResponse;
+                                })
+                                .catch(() => {
+                                    // Network failed, return offline page for navigation requests
+                                    if (event.request.mode === 'navigate') {
+                                        return caches.match(OFFLINE_URL);
+                                    }
+                                    return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
+                                });
+                        })
+                );
+            });
+
+            // Handle messages from the main thread
+            self.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'SKIP_WAITING') {
+                    self.skipWaiting();
+                }
+                if (event.data && event.data.type === 'GET_VERSION') {
+                    event.ports[0].postMessage({ version: '${PWA_VERSION}' });
+                }
+            });
+        `;
+
+        // Register service worker dynamically using Blob URL
+        let swRegistration = null;
+        let newWorkerWaiting = null;
+
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                // Create Blob URL for service worker
+                const swBlob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+
+                navigator.serviceWorker.register(swUrl, { scope: './' })
+                    .then((registration) => {
+                        swRegistration = registration;
+                        console.log('[PWA] Service Worker registered successfully');
+
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+
+                        // Handle updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('[PWA] New Service Worker found');
+
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    newWorkerWaiting = newWorker;
+                                    showUpdateNotification();
+                                }
+                            });
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+
+                // Listen for messages from service worker
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'SW_UPDATED') {
+                        console.log('[PWA] Service Worker updated to version:', event.data.version);
+                    }
+                });
+
+                // Handle controller change (new SW activated)
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('[PWA] New Service Worker activated');
+                });
+            }
+        }
+
+        /* ===========================================================
+           PWA - INSTALLATION HANDLING
+           =========================================================== */
+        let deferredPrompt = null;
+        let installBannerDismissed = localStorage.getItem('pwaInstallDismissed') === 'true';
+
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('[PWA] beforeinstallprompt fired');
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Show install UI elements
+            showInstallUI();
+        });
+
+        // Show install UI (both header button and banner)
+        function showInstallUI() {
+            // Show header button
+            const headerBtn = document.getElementById('pwaInstallBtn');
+            if (headerBtn) {
+                headerBtn.classList.add('show');
+            }
+
+            // Show banner if not dismissed
+            if (!installBannerDismissed) {
+                const banner = document.getElementById('pwaInstallBanner');
+                if (banner) {
+                    banner.classList.add('show');
+                }
+            }
+        }
+
+        // Hide install UI
+        function hideInstallUI() {
+            const headerBtn = document.getElementById('pwaInstallBtn');
+            const banner = document.getElementById('pwaInstallBanner');
+
+            if (headerBtn) headerBtn.classList.remove('show');
+            if (banner) banner.classList.remove('show');
+        }
+
+        // Handle install button click
+        function installPWA() {
+            if (!deferredPrompt) {
+                // Show manual instructions for browsers that don't support beforeinstallprompt
+                showManualInstallInstructions();
+                return;
+            }
+
+            console.log('[PWA] Showing install prompt');
+            deferredPrompt.prompt();
+
+            deferredPrompt.userChoice.then((choiceResult) => {
+                console.log('[PWA] User choice:', choiceResult.outcome);
+
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('[PWA] User accepted the install prompt');
+                    hideInstallUI();
+                }
+
+                deferredPrompt = null;
+            });
+        }
+
+        // Show manual installation instructions
+        function showManualInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const isChrome = /Chrome/.test(navigator.userAgent) && !/Edge|Edg/.test(navigator.userAgent);
+            const isFirefox = /Firefox/.test(navigator.userAgent);
+            const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
+
+            let instructions = 'To install this app:\n\n';
+
+            if (isIOS) {
+                instructions += '1. Tap the Share button (📤) at the bottom\n';
+                instructions += '2. Scroll down and tap "Add to Home Screen"\n';
+                instructions += '3. Tap "Add" in the top right';
+            } else if (isAndroid && isChrome) {
+                instructions += '1. Tap the menu (⋮) in the top right\n';
+                instructions += '2. Tap "Add to Home screen"\n';
+                instructions += '3. Tap "Add" to confirm';
+            } else if (isFirefox) {
+                instructions += '1. Tap the menu (⋮)\n';
+                instructions += '2. Tap "Install" or look for the home icon';
+            } else if (isSafari) {
+                instructions += '1. Click the Share button\n';
+                instructions += '2. Select "Add to Dock" or "Add to Home Screen"';
+            } else {
+                instructions += '• Chrome/Edge: Click menu (⋮) → "Install App"\n';
+                instructions += '• Safari: Share → "Add to Home Screen"\n';
+                instructions += '• Firefox: Look for install option in address bar';
+            }
+
+            alert(instructions);
+        }
+
+        // Dismiss install banner
+        function dismissInstallBanner() {
+            const banner = document.getElementById('pwaInstallBanner');
+            if (banner) {
+                banner.classList.remove('show');
+            }
+            localStorage.setItem('pwaInstallDismissed', 'true');
+            installBannerDismissed = true;
+        }
+
+        // Handle app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App was installed successfully');
+            hideInstallUI();
+            deferredPrompt = null;
+
+            // Show success message
+            showOfflineIndicator('App installed successfully!', true);
+            setTimeout(hideOfflineIndicator, 3000);
+        });
+
+        /* ===========================================================
+           PWA - OFFLINE/ONLINE STATUS HANDLING
+           =========================================================== */
+        function showOfflineIndicator(message = "You're offline", isOnline = false) {
+            const indicator = document.getElementById('offlineIndicator');
+            const icon = document.getElementById('offlineIcon');
+            const text = document.getElementById('offlineText');
+
+            if (indicator && icon && text) {
+                icon.textContent = isOnline ? '✅' : '📡';
+                text.textContent = message;
+                indicator.classList.toggle('online', isOnline);
+                indicator.classList.add('show');
+            }
+        }
+
+        function hideOfflineIndicator() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (indicator) {
+                indicator.classList.remove('show');
+            }
+        }
+
+        // Monitor online/offline status
+        window.addEventListener('online', () => {
+            console.log('[PWA] Back online');
+            showOfflineIndicator("You're back online!", true);
+            setTimeout(hideOfflineIndicator, 3000);
+        });
+
+        window.addEventListener('offline', () => {
+            console.log('[PWA] Gone offline');
+            showOfflineIndicator("You're offline - Don't worry, the app still works!");
+        });
+
+        /* ===========================================================
+           PWA - UPDATE HANDLING
+           =========================================================== */
+        function showUpdateNotification() {
+            const notification = document.getElementById('updateNotification');
+            if (notification) {
+                notification.classList.add('show');
+            }
+        }
+
+        function updateApp() {
+            if (newWorkerWaiting) {
+                newWorkerWaiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+            dismissUpdate();
+
+            // Reload after a short delay to allow SW to activate
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
+
+        function dismissUpdate() {
+            const notification = document.getElementById('updateNotification');
+            if (notification) {
+                notification.classList.remove('show');
+            }
+        }
+
+        /* ===========================================================
+           PWA - CHECK IF RUNNING AS INSTALLED APP
+           =========================================================== */
+        function isRunningAsPWA() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true ||
+                   document.referrer.includes('android-app://');
+        }
+
         /* ===========================================================
            INITIALIZATION
            =========================================================== */
-        // Initialize first game on load (if needed)
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('[App] Initializing Logic Puzzle Master v' + PWA_VERSION);
+
+            // Inject manifest
+            injectManifest();
+
+            // Register service worker
+            registerServiceWorker();
+
+            // Check if running as PWA - hide install UI if so
+            if (isRunningAsPWA()) {
+                console.log('[PWA] Running as installed app');
+                hideInstallUI();
+            }
+
+            // Check initial online status
+            if (!navigator.onLine) {
+                showOfflineIndicator();
+            }
+
             // Pre-generate first game content
             generateGame1();
         });
